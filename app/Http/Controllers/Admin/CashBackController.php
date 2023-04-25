@@ -8,7 +8,9 @@ use App\Offer;
 use App\User;
 use App\OfferStore;
 use App\Admin;
+use App\Item;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Validator;
 use Redirect;
 use IMS;
@@ -49,10 +51,25 @@ class CashBackController extends Controller {
 		if ($admin->hasperm('Ofertas de descuento')) {
 		
 		$u = new User;
+		$products = Item::orderBy('store_id')->get();
+		$productData = array();
+
+		foreach ($products as $product) {
+			$username = User::find($product->store_id);
+
+			if(!isset($username)) continue;
+
+			$username = $username->name;
+			if(!array_key_exists($username, $productData))
+				$productData[$username] = array();
+
+			$productData[$username][$product->id] = $product->name;
+		}
 
 		return View($this->folder.'add',[
 
 			'data' 		=> new Offer,
+			'products' => $productData,
 			'form_url' 	=> env('admin').'/offer',
 			'users' 	=> $u->getAll(),
 			'array'		=> []

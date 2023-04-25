@@ -468,7 +468,10 @@
    * @requires select2 plugin
    */
   if ($(".js-select2").length > 0 ) {
-    $(".js-select2").select2();
+    $(".js-select2").select2({
+      theme: "bootstrap",
+      width: "100%"
+    });
   }
 
 
@@ -476,9 +479,9 @@
    * @description Initialize notifications
    * @param {(Element|jQuery)} [context] - A DOM Element, input tag  to use as context.
    */
-  var myDropdown = document.getElementById('notifications')
+  /*var myDropdown = document.getElementById('notifications')
   myDropdown.addEventListener('show.bs.dropdown', function () {
    // Algo...
-  })
+  });*/
   
 })(window.jQuery);

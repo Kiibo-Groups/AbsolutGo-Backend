@@ -10,7 +10,7 @@
 |
 */
   
-Route::group(['namespace' => 'Admin','prefix' => env('admin')], function(){
+Route::name('admin.')->prefix(env('admin'))->namespace('Admin')->group(function(){
 // Route::namespace('Admin')->prefix(env('admin'))->group(function(){
 
     Route::get('/','AdminController@index');

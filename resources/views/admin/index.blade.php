@@ -47,8 +47,6 @@
                         <h5 class="card-title text-center pb-0 fs-4">Panel Administrativo</h5>
                         <p class="text-center small">Ingresa tus datos de acceso como Administrador.</p>
                     </div>
-
-                        
                     <form class="row g-3 needs-validation" novalidate action="{{ $form_url }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="col-12">

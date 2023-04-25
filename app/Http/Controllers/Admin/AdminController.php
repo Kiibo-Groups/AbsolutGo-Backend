@@ -12,6 +12,7 @@ use App\Order;
 use App\OrderItem;
 use App\Delivery;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Validator;
 use Redirect;
 class AdminController extends Controller {
@@ -39,6 +40,9 @@ class AdminController extends Controller {
 	{
 		$username = $request->input('username');
 		$password = $request->input('password');
+		Log::info('HOLA');
+		Log::info($username);
+		Log::info($password);
 
 		if (auth()->guard('admin')->attempt(['username' => $username, 'password' => $password]))
 		{

@@ -22,6 +22,8 @@
     <link href="{{ Asset('assets/vendor/simple-datatables/style.css') }}" rel="stylesheet">
     <link href="{{ Asset('assets/vendor/daterangepicker/daterangepicker.css')}}" rel="stylesheet">
     <link href="{{ Asset('assets/vendor/timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
+    <link href="{{ Asset('assets/vendor/select2/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ Asset('assets/vendor/select2-bootstrap-theme/select2-bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Template Main CSS File -->
     <link href="{{ Asset('assets/css/style.css') }}" rel="stylesheet">

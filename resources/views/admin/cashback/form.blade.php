@@ -3,7 +3,7 @@
 		<div class="row mb-3">
 			<div class="col-md-6">
 				<label for="inputEmail6">Producto</label>
-				{!! Form::text('code',null,['id' => 'code','class' => 'form-control','required' => 'required'])!!}
+				{!! Form::select('code',$products,null,['id' => 'code','class' => 'form-control js-select2','required' => 'required'])!!}
 			</div>
 			<div class="col-md-6">
 				<label for="inputEmail6">Descripción</label>
