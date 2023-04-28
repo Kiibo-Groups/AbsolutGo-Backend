@@ -188,7 +188,7 @@ class CategoryStore extends Authenticatable
 
     public function getSelectSubCat($id)
     {
-        $cats = CategoryStore::where('id_c',$id)->where('type_cat',0)->get();
+        $cats = CategoryStore::where('id_c',$id)->where('type_cat',2)->get();
         
         $data = [];
         foreach ($cats as $key) {

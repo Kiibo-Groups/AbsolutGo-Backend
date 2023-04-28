@@ -753,7 +753,7 @@
             $.ajax({
                 async: true,
                 type:'GET',
-                url:'https://bincar.kiibo.mx/api/getCategory/'+$id,
+                url:'https://absolutgo.kiibo.mx/api/getCategory/'+$id,
                 success: function(resp) {  
                     console.log(resp);
                     const request = resp.data; 
@@ -789,7 +789,7 @@
             $.ajax({
                 async: true,
                 type:'GET',
-                url:'https://bincar.kiibo.mx/api/getSelectSubCat/'+$id,
+                url:'https://absolutgo.kiibo.mx/api/getSelectSubCat/'+$id,
                 success: function(resp) {  
                     const request = resp.data;
                     // Limpiamos Select 
