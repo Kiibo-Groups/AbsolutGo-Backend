@@ -1125,4 +1125,14 @@ class ApiController extends Controller {
 		}
 	}
 
+	public function getFacturamaData(Request $request) {
+		try {
+			/*$data = $request->all();
+
+			return response()->json(['data' => Subscription::find($id)->update($data)]);*/
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
 }

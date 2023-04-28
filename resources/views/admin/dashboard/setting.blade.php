@@ -131,6 +131,30 @@
                     </div>
                 </div>
 
+                <h4>Facturama</h4>
+                <div class="card py-3 m-b-30">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="asd">ID</label>
+                            <input type="text" class="form-control" id="asd" name="facturama_id" value="{{ $facturama["id"] }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="asd">PUBLIC KEY</label>
+                            <input type="text" class="form-control" id="asd" name="facturama_publickey" value="{{ $facturama["publickey"] }}">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="asd">API KEY</label>
+                            <input type="text" class="form-control" id="asd" name="facturama_apikey" value="{{ $facturama["apikey"] }}">
+                        </div>
+                    </div>
+                </div>
+                </div>
+
                 <h4>Social Links</h4>
                 <div class="card py-3 m-b-30">
                 <div class="card-body">

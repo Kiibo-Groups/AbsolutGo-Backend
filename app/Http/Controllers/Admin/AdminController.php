@@ -100,6 +100,7 @@ class AdminController extends Controller {
 		if($admin->hasperm('Dashboard - Configuraciones')){
 			return View($this->folder.'dashboard.setting',[
 				'data' 		=> auth()->guard('admin')->user(),
+				'facturama' => ['id' => "", 'publickey' => "", 'apikey' => ""],
 				'form_url'	=> Asset(env('admin').'/setting'),
 				'admin'		=> new Admin,
 

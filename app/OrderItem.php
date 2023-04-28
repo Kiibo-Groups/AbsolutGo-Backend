@@ -129,6 +129,7 @@ class OrderItem extends Authenticatable
           $add->qty         = $qty[$i];
           $add->qty_type    = $unit[$i];
           $add->price       = $price;
+          $add->cart_no = 1;
           $add->save();
       }
    }

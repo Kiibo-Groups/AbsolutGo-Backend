@@ -55,6 +55,10 @@ class OrderController extends Controller {
 		{
 			$title = "Pedidos despachados";
 		}
+		elseif($_GET['status'] == 8)
+		{
+			return;
+		}
 		elseif($_GET['status'] == 5)
 		{
 			$title = "Órdenes completadas";

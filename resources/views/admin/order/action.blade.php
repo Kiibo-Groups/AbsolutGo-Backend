@@ -38,6 +38,37 @@
             
         </ul>
     </div>
+@elseif($row->status == 8)
+    <div style="text-align: right">
+        <button class="btn btn-primary dropdown-toggle" 
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Opciones
+        </button>
+        
+        <ul class="dropdown-menu"  style="margin: 0px; position: absolute; inset: 0px auto auto 0px; transform: translate(0px, 38px);" data-popper-placement="bottom-start">
+            <li>
+                <a href="{{ Asset(env('admin').'/orderStatus?id='.$row->id.'&status=0') }}" onclick="return confirm('Are you sure?')" class="dropdown-item">
+                    Aceptar Pedido
+                </a>
+            </li>
+            <li>
+                <a href="{{ Asset(env('admin').'/order/print/'.$row->id) }}" class="dropdown-item">
+                    Imprimir Recibo
+                </a>
+            </li>
+            <li>
+                <a href="javascript::void()" data-bs-toggle="modal" data-bs-target="#slideRightModalInfoPay{{ $row->id }}" class="dropdown-item">
+                    Desglose de información
+                </a>
+            </li>
+            <li>
+                <a href="{{ Asset(env('admin').'/orderStatus?id='.$row->id.'&status=2') }}" onclick="return confirm('Are you sure?')" class="dropdown-item">
+                    Cancelar Pedido
+                </a>
+            </li>
+            
+        </ul>
+    </div>
 @elseif($row->status == 1)
     <div style="text-align: right">
         <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

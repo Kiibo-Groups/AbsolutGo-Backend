@@ -66,6 +66,7 @@ class Order extends Authenticatable
          $add->payment_method = isset($data['payment']) ? $data['payment'] : 1;
          $add->payment_id     = isset($data['payment_id']) ? $data['payment_id'] : 0;
          $add->notes          = isset($data['notes']) ? $data['notes'] : '';
+         $add->status         = 8;
          $add->save();
 
          /** Generamos Codigo de entrega */
@@ -1256,6 +1257,13 @@ class Order extends Authenticatable
          $order->d_charges          = 0;
          $order->discount           = 0;
          $order->total              = 0;
+         $order->code_order = "A";
+         $order->external_id = 1;
+         $order->cart_no = 1;
+         $order->InnStore = 1;
+         $order->mesa = 1;
+         $order->t_charges = 1;
+         $order->price_comm = 1;
          $order->save();
 
          $item = new OrderItem;

@@ -46,6 +46,10 @@ class OrderController extends Controller {
 			{
 				$title = "Órdenes canceladas";
 			}
+			elseif($_GET['status'] == 8)
+			{
+				$title = "Pedido sin aceptar";
+			}
 			elseif($_GET['status'] == 5)
 			{
 				$title = "Órdenes completadas";

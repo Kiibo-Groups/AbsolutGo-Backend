@@ -126,6 +126,14 @@
     </a>
     <ul id="tables-nav" class="nav-content @if($page === 'order') active @else collapse @endif" data-bs-parent="#sidebar-nav">
       <li>
+        <a href="{{ Asset(env('admin').'/order?status=8') }}" class=" @if($page === 'order?status=0') active @endif">
+          <i class="bi bi-circle"></i>
+          <span>
+            Pedidos sin aceptar
+          </span>
+        </a>
+      </li> 
+      <li>
         <a href="{{ Asset(env('admin').'/order?status=0') }}" class=" @if($page === 'order?status=0') active @endif">
           <i class="bi bi-circle"></i>
           <span>

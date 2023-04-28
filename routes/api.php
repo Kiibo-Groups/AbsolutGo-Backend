@@ -146,6 +146,11 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::post('subscription/update/{id}', 'ApiController@updateSubscription');
     Route::post('subscription/delete/{id}', 'ApiController@deleteSubscription');
 
+    /**
+     * Facturama
+     */
+    Route::get('facturama/data', 'ApiController@getFacturamaData');
+
     include("dboy.php");
     include("store.php");
 
