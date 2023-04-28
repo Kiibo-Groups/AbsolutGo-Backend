@@ -77,7 +77,7 @@ Route::group(array('namespace' => 'Api'), function () {
      */
     Route::get("getCategory/{id}",'ApiController@getCategory');
     Route::get("getSelectSubCat/{id}",'ApiController@getSelectSubCat');
-    Route::get("getSelectSubCatLast/{id}",'ApiCoGroupntroller@getSelectSubCatLast');
+    Route::get("getSelectSubCatLast/{id}",'ApiController@getSelectSubCatLast');
 
     /**
      * OpenPay
