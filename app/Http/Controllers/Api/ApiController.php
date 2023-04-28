@@ -652,6 +652,17 @@ class ApiController extends Controller {
 		}
 	}
 
+	public function getOpenpayData(Request $request) {
+		try {
+			$admin = Admin::find(1);
+			$data = array("id" => $admin->openpay_id, "apikey" => $admin->openpay_apikey);
+			
+			return response()->json(['data' => $data]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
+		}
+	}
+
 	public function addBalance(Request $Request)
 	{
 		try {

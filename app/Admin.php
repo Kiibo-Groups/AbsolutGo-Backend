@@ -88,8 +88,10 @@ class Admin extends Authenticatable
 		$update->stripe_api_id 		= isset($data['stripe_api_id']) ? $data['stripe_api_id'] : null;
 		$update->ApiKey_google   	= isset($data['ApiKey_google']) ? $data['ApiKey_google'] : null;
 		$update->comm_stripe   	    = isset($data['comm_stripe']) ? $data['comm_stripe'] : null;
-		$update->comm_stripe_st      = isset($data['comm_stripe_st']) ? $data['comm_stripe_st'] : 0;
+		$update->comm_stripe_st     = isset($data['comm_stripe_st']) ? $data['comm_stripe_st'] : 0;
 		$update->max_cash 			= isset($data['max_cash']) ? $data['max_cash'] : 0;
+		$update->openpay_id 		= isset($data['openpay_id']) ? $data['openpay_id'] : 0;
+		$update->openpay_apikey 	= isset($data['openpay_apikey']) ? $data['openpay_apikey'] : 0;
 		$update->s_data 			= serialize($a);
 
 		if(isset($data['new_password']))

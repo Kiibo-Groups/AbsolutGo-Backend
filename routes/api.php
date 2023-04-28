@@ -90,6 +90,7 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::post('getCard','ApiController@getCard');
     Route::post('chargeClient','ApiController@chargeClient');
     Route::post('addBalance','ApiController@addBalance');
+    Route::get('openpay/data','ApiController@getOpenpayData');
 
     /**
      * Stripe

@@ -155,6 +155,24 @@
                 </div>
                 </div>
 
+                <h4>OpenPay</h4>
+                <div class="card py-3 m-b-30">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="asd">ID</label>
+                            <input type="text" class="form-control" id="asd" name="openpay_id" value="{{ $data->openpay_id }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="asd">API KEY</label>
+                            <input type="text" class="form-control" id="asd" name="openpay_apikey" value="{{ $data->openpay_apikey }}">
+                        </div>
+                    </div>
+                </div>
+                </div>
+
+
                 <h4>Social Links</h4>
                 <div class="card py-3 m-b-30">
                 <div class="card-body">
