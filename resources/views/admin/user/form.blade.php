@@ -787,7 +787,7 @@
         // obtenemos SubCategorias
         const GetSubCats = ($id) => {
             $.ajax({
-                async: true,
+                async: true, 
                 type:'GET',
                 url:'https://absolutgo.kiibo.mx/api/getSelectSubCat/'+$id,
                 success: function(resp) {  
