@@ -1004,7 +1004,7 @@ class ApiController extends Controller {
 		try {
 			$city_id = isset($_GET['city_id']) ? $_GET['city_id'] : 0;
 			$subcat = CategoryStore::find($id_subcat);
-			$cat = $subcat->c_id;
+			$cat = $subcat->id_cp;
 			$subcat = $subcat->id;
 			$req = new User;
 

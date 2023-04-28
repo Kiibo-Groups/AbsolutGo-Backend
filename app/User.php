@@ -244,7 +244,7 @@ class User extends Authenticatable
         
         $res  = User::where(function($query) use($city_id,$trending,$cat, $category, $subcategory){
 
-            $query->where('status',0)->where('city_id',$city_id)->where('subtype', $category)->where('subsubtype', $subcategory);
+            $query->where('status',0)->where('city_id',$city_id)->where('type', $category)->where('subtype', $subcategory);
 
             if(isset($_GET['banner']))
             {
