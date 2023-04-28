@@ -40,9 +40,6 @@ class AdminController extends Controller {
 	{
 		$username = $request->input('username');
 		$password = $request->input('password');
-		Log::info('HOLA');
-		Log::info($username);
-		Log::info($password);
 
 		if (auth()->guard('admin')->attempt(['username' => $username, 'password' => $password]))
 		{

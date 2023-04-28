@@ -236,6 +236,39 @@ class User extends Authenticatable
        
     }
 
+    public function getSubcatLast($city_id,$category, $subcategory, $trending = false)
+    {
+        $lat        = isset($_GET['lat']) ? $_GET['lat'] : 0;
+        $lon        = isset($_GET['lng']) ? $_GET['lng'] : 0;
+        $cat        = isset($_GET['cat']) ? $_GET['cat'] : 0;
+        
+        $res  = User::where(function($query) use($city_id,$trending,$cat, $category, $subcategory){
+
+            $query->where('status',0)->where('city_id',$city_id)->where('subtype', $category)->where('subsubtype', $subcategory);
+
+            if(isset($_GET['banner']))
+            {
+                $sid   = BannerStore::where('banner_id',$_GET['banner'])->pluck('store_id')->toArray();
+
+                $query->whereIn('users.id',$sid);
+            }
+
+            // Obtenemos las categorias
+            // $get_c = CategoryStore::where('type_cat',2)->where('id_c',$cat)->pluck('id')->toArray();
+
+            // $query->whereIn('users.subsubtype',$get_c);
+        })->select('users.*',DB::raw("6371 * acos(cos(radians(" . $lat . ")) 
+                * cos(radians(users.lat)) 
+                * cos(radians(users.lng) - radians(" . $lon . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(users.lat))) AS distance"))
+        ->orderBy('id','DESC')->skip(0)->take(100)->get();
+        
+        
+        return $this->SaveData($res,$lat,$lon);
+       
+    }
+
     public function InTrending($city_id)
     {
         $lat        = isset($_GET['lat']) ? $_GET['lat'] : 0;

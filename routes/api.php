@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +77,7 @@ Route::group(array('namespace' => 'Api'), function () {
      */
     Route::get("getCategory/{id}",'ApiController@getCategory');
     Route::get("getSelectSubCat/{id}",'ApiController@getSelectSubCat');
+    Route::get("getSelectSubCatLast/{id}",'ApiCoGroupntroller@getSelectSubCatLast');
 
     /**
      * OpenPay
@@ -135,6 +137,14 @@ Route::group(array('namespace' => 'Api'), function () {
      * Tracking Web
      */
     Route::get('chkTrackingOrder/{id}','ApiController@chkTrackingOrder');
+
+    /**
+     * Subscriptions
+     */
+    Route::post('subscription/create', 'ApiController@createSubscription');
+    Route::get('subscription/', 'ApiController@readSubscriptions');
+    Route::post('subscription/update/{id}', 'ApiController@updateSubscription');
+    Route::post('subscription/delete/{id}', 'ApiController@deleteSubscription');
 
     include("dboy.php");
     include("store.php");

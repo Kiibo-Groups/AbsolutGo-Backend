@@ -32,12 +32,13 @@ use App\Delivery;
 use App\CategoryStore;
 use App\Opening_times;
 use App\CardsUser;
+use App\Category;
 use App\Favorites;
 use App\Tables;
 use App\Commaned;
 use App\Visits;
 use App\Deposit;
-
+use App\Subscription;
 use DB;
 use Validator;
 use Redirect;
@@ -988,6 +989,19 @@ class ApiController extends Controller {
 		}
 	}
 
+	public function getSelectSubCatLast($id_subcat) {
+		try {
+			$city_id = isset($_GET['city_id']) ? $_GET['city_id'] : 0;
+			$subcat = CategoryStore::find($id_subcat);
+			$cat = $subcat->c_id;
+			$subcat = $subcat->id;
+			$req = new User;
+
+			return response()->json(['data' => $req->getSubcatLast($city_id, $cat, $subcat)]);
+		} catch(\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
 
 	/**
 	 * Tracking Web
@@ -1012,7 +1026,7 @@ class ApiController extends Controller {
 			{
 				$items = [];
 				$i     = new OrderItem;
-
+				
 				if($order->status == 0)
 				{
 					$status = "Pendiente";
@@ -1066,4 +1080,49 @@ class ApiController extends Controller {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
 	}
+
+
+	/**
+	 * Subscriptions CRUD
+	 */
+
+	public function createSubscription(Request $request) {
+		try {
+			$data = $request->all();
+
+			if(!isset($data['time_subscription']))
+				$data['time_subscription'] = 30;
+
+			return response()->json(['data' => Subscription::create($data)]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
+	public function readSubscriptions(Request $request) {
+		try {
+			return response()->json(['data' => Subscription::get()]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	} 
+
+	public function deleteSubscription($id) {
+		try {
+			return response()->json(['data' => Subscription::find($id)->delete()]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
+	public function updateSubscription($id, Request $request) {
+		try {
+			$data = $request->all();
+
+			return response()->json(['data' => Subscription::find($id)->update($data)]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
 }
