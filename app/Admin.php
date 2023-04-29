@@ -109,7 +109,7 @@ class Admin extends Authenticatable
 
 		if(isset($data['contrato']))
 		{
-            $data['contrato']->move("upload/admin/", "contrato.pdf");   
+            $data['contrato']->move("upload/contracts/", "contrato.pdf");   
 		}
 
 		$update->save();
