@@ -59,6 +59,22 @@ Route::name('admin.')->prefix(env('admin'))->namespace('Admin')->group(function(
         Route::post('exportData_users','ReportController@exportData_users');
 
         /*
+        |-------------------------------
+        |Bills Controllers
+        |-------------------------------
+        */
+        Route::resource('bill','BillController');
+        Route::get('bill/delete/{id}','BillController@delete');
+        Route::get('bill/status/{id}','BillController@status');
+        Route::get('bill_clients','BillController@getClients');
+        Route::get('add_client','BillController@addClient')->name('addClient');
+        Route::post('addClient','BillController@_addClient');
+        Route::get('bill_clients/{id}/edit','BillController@editClient');
+        Route::post('updateClient','BillController@updateClient');
+        Route::get('bill_clients/delete/{id}','BillController@deleteClient');
+        
+        
+        /*
         |------------------------------
         |Manage Admin Account
         |------------------------------

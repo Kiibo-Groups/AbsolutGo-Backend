@@ -88,6 +88,34 @@
   @endif
   <!-- Negocios -->
 
+  <!-- Facturas --> 
+  <li class="nav-item">
+    <a class="nav-link @if($page === 'bill' || $page == 'addClient' ) active @else collapsed @endif" data-bs-target="#tables-bill" data-bs-toggle="collapse" href="#">
+      <i class="bx bxs-file"></i>
+      <span>Facturación</span>
+      <i class="bi bi-chevron-down ms-auto"></i>
+    </a>
+    <ul id="tables-bill" class="nav-content @if($page === 'bill' || $page == 'addClient' ) active @else collapse @endif" data-bs-parent="#sidebar-nav">
+      <li>
+        <a href="{{ Asset(env('admin').'/bill') }}" class=" @if($page === 'bill') active @endif">
+          <i class="bi bi-circle"></i>
+          <span>
+            Listado de facturas
+          </span>
+        </a>
+      </li>   
+      <li>
+        <a href="{{ Asset(env('admin').'/bill_clients') }}" class=" @if($page === 'addClient') active @endif">
+          <i class="bi bi-circle"></i>
+          <span>
+            Listado de Clientes
+          </span>
+        </a>
+      </li>
+    </ul>
+  </li> 
+  <!-- Facturas -->
+
   <!-- CashBack -->
   <li class="nav-item">
     <a class="nav-link  @if($page === 'cashback') active @else collapsed @endif" href="{{ Asset(env('admin').'/cashback') }}">

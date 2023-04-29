@@ -106,7 +106,7 @@
                                     <!-- Whatsapp -->
                                     <li>
                                         <a target="_blank" href="https://api.whatsapp.com/send/?phone={{ str_replace(" ", "", $row->phone) }}&type=phone_number&app_absent=0&text=Adjunto el archivo del contrato de confidencialidad: {{ Asset("/upload/contracts/contrato.pdf") }}" class="dropdown-item">
-                                            Whatsapp
+                                            Enviar Contrato
                                         </a>
                                     </li>
                                     <!-- ViewInfo -->
