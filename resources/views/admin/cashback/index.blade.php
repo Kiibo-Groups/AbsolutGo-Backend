@@ -27,7 +27,7 @@
                         <tbody>
                             @foreach($data as $row)
                             <tr>
-                                <td width="17%">{{ $row->code }}</td>
+                                <td width="17%">ID: {{ $row->code }} "{{ \App\Item::find($row->code)->name }}"</td>
                                 <td width="17%">
                                     @if($row->type == 0) {{ $row->value }}% @else {{ $row->value }} @endif
                                 </td>

@@ -107,6 +107,11 @@ class Admin extends Authenticatable
             $update->logo = $filename;   
         }
 
+		if(isset($data['contrato']))
+		{
+            $data['contrato']->move("upload/admin/", "contrato.pdf");   
+		}
+
 		$update->save();
 
 	}

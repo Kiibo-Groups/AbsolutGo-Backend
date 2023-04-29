@@ -12,8 +12,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-
-                <div class="card py-3 m-b-30">
+                 <div class="card py-3 m-b-30">
                     <div class="card-body">
 
                         <div class="row mb-3">
@@ -53,7 +52,6 @@
                     </div>
                 </div> 
 
-
                 <h1 style="font-size: 20px">Establecer valor máximo para pago en efectivo</h1>
                 <div class="card py-3 m-b-30">
                     <div class="card-body">
@@ -66,7 +64,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <h1 style="font-size: 20px">Establecer distancia maxima para notificación de repartidores.</h1>
                 <div class="card py-3 m-b-30">
@@ -171,6 +168,19 @@
                     </div>
                 </div>
                 </div>
+
+                <h4>Contrato de confidencialidad</h4>
+                <div class="card py-3 m-b-30">
+                    <div class="card-body">
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="asd">Contrato en PDF</label>
+                                <input type="file" class="form-control" id="contrato" name="contrato">
+                            </div>
+                        </div>
+                    </div>
+                </div> 
 
 
                 <h4>Social Links</h4>

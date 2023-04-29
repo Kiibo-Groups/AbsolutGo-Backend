@@ -103,6 +103,12 @@
                                             Agregar Pago
                                         </a>
                                     </li>
+                                    <!-- Whatsapp -->
+                                    <li>
+                                        <a target="_blank" href="https://api.whatsapp.com/send/?phone={{ str_replace(" ", "", $row->phone) }}&type=phone_number&app_absent=0&text=Adjunto el archivo del contrato de confidencialidad: {{ Asset("/upload/admin/contrato.pdf") }}" class="dropdown-item">
+                                            Whatsapp
+                                        </a>
+                                    </li>
                                     <!-- ViewInfo -->
                                     <li>
                                         <a href="javascript::void()" class="dropdown-item" onclick="showMsg('Username : {{ $row->email }}<br>Password : {{ $row->shw_password }}')">

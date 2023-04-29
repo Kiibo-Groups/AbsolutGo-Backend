@@ -62,6 +62,8 @@ class Offer extends Authenticatable
         $add->status            = isset($data['status']) ? $data['status'] : 0;
         $add->start_from        = isset($data['start_from']) ? date('Y-m-d',strtotime($data['start_from'])) : null;
         $add->valid_till        = isset($data['valid_till']) ? date('Y-m-d',strtotime($data['valid_till'])) : null;
+        $add->img               = isset($data['img']) ? $data['img'] : "";
+        $add->unique_offer      = isset($data['unique_offer']) ? $data['unique_offer'] : 0;
         $add->s_data            = serialize([$a,$b]);
         $add->save();
 
