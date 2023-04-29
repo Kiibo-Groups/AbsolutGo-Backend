@@ -75,6 +75,7 @@ Route::group(array('namespace' => 'Api'), function () {
     /**
      * Categorias
      */
+    Route::get("getMainCategories/",'ApiController@getMainCategories');
     Route::get("getCategory/{id}",'ApiController@getCategory');
     Route::get("getSelectSubCat/{id}",'ApiController@getSelectSubCat');
     Route::get("getSelectSubCatLast/{id}",'ApiController@getSelectSubCatLast');
@@ -151,6 +152,11 @@ Route::group(array('namespace' => 'Api'), function () {
      * Facturama
      */
     Route::get('facturama/data', 'ApiController@getFacturamaData');
+
+    /**
+     * Create user
+     */
+    Route::post('user/create', 'ApiController@createUser');
 
     include("dboy.php");
     include("store.php");

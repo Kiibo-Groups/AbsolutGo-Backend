@@ -733,6 +733,7 @@
                 id_subtype = "{{$data->subtype}}";
                 id_subsubtype = "{{$data->subsubtype}}";
             } 
+            console.log("Hola");
             if(store_type[selectedIndex].value != 0) GetCats(store_type[selectedIndex].value);
         }, 800);
 

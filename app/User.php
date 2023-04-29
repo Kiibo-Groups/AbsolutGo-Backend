@@ -171,6 +171,123 @@ class User extends Authenticatable
         $gallery->addNew($data,$add->id);
     }
 
+    public function addNewApi($data,$type)
+    {
+
+        $a                          = isset($data['lid']) ? array_combine($data['lid'], $data['l_name']) : [];
+        $b                          = isset($data['lid']) ? array_combine($data['lid'], $data['l_address']) : [];
+        $add                        = $type === 'add' ? new User : User::find($type);
+        $add->name                  = isset($data['name']) ? $data['name'] : null;
+        
+        $add->phone                 = isset($data['phone']) ? $data['phone'] : null;
+        $add->email                 = isset($data['email']) ? $data['email'] : null;
+        $add->status                = 1;
+        $add->city_id               = isset($data['city_id']) ? $data['city_id'] : 0;
+        $add->address               = isset($data['address']) ? $data['address'] : 0;
+        $add->delivery_time         = isset($data['delivery_time']) ? $data['delivery_time'] : null;
+        $add->person_cost           = isset($data['person_cost']) ? $data['person_cost'] : null;
+        $add->Cuenta_clave          = isset($data['Cuenta_clave']) ? $data['Cuenta_clave'] : 0;
+        $add->banco_name            = isset($data['banco_name']) ? $data['banco_name'] : 0;
+        $add->lat                   = isset($data['lat']) ? $data['lat'] : null;
+        $add->lng                   = isset($data['lng']) ? $data['lng'] : null;
+        $add->type                  = isset($data['store_type']) ? $data['store_type'] : 0;
+        $add->subtype               = isset($data['store_subtype']) ? $data['store_subtype'] : 0;
+        $add->subsubtype            = isset($data['subsubtype']) ? $data['subsubtype'] : 0;
+        $add->type_menu             = isset($data['type_menu']) ? $data['type_menu'] : 0;
+        $add->type_store            = isset($data['type_store']) ? $data['type_store'] : 0;
+        $add->min_cart_value        = isset($data['min_cart_value']) ? $data['min_cart_value'] : null;
+        
+        $add->c_type                = isset($data['c_type']) ? $data['c_type'] : 0;
+        $add->c_value               = isset($data['c_value']) ? $data['c_value'] : 0;
+        $add->t_type                = isset($data['t_type']) ? $data['t_type'] : 0;
+        $add->t_value               = isset($data['t_value']) ? $data['t_value'] : 0;
+        
+        /*****
+         * 0 = no permitir envios a domicilio
+         * 1 = los repartidores y el cobro de envio son por parte de administracion
+         * 2 = los repartidores y el cobro de envio son por parte del negocio
+         */
+        $add->p_staff               = isset($data['p_staff']) ? $data['p_staff'] : 1;
+        /*****
+         * Tipo de cobro
+         * 0 = valor por km
+         * 1 = Valor fijo
+         */
+        $add->type_charges_value    = isset($data['type_charges_value']) ? $data['type_charges_value']: 1;
+        // Cobro de envio Repartidores Externos
+        $add->delivery_charges_value = isset($data['delivery_charges_value']) ? $data['delivery_charges_value'] : null;
+        // Distancia maxima del servicio
+        $add->distance_max          = isset($data['distance_max']) ? $data['distance_max']: 0;
+        // Distancia minima del servicio
+        $add->delivery_min_distance = isset($data['delivery_min_distance']) ? $data['delivery_min_distance'] : 0;
+        // Cobro por el minimo del servicio
+        $add->delivery_min_charges_value    = isset($data['delivery_min_charges_value']) ? $data['delivery_min_charges_value'] : 0;
+        
+        $add->s_data                = serialize([$a,$b]);
+ 
+          
+        $add->service_del           = isset($data['service_del']) ? $data['service_del'] : 1;
+        $add->pickup                = isset($data['pickup']) ? $data['pickup'] : 0;
+        if(isset($data['img']))
+        {
+            $filename   = time().rand(111,699).'.' .$data['img']->getClientOriginalExtension(); 
+            $data['img']->move("upload/user/", $filename);   
+            $add->img = $filename;   
+        }
+        if(isset($data['logo']))
+        {
+            $filename   = time().rand(111,699).'.' .$data['logo']->getClientOriginalExtension(); 
+            $data['logo']->move("upload/user/logo/", $filename);   
+            $add->logo = $filename;
+        }
+ 
+        if(isset($data['password']))
+        {
+            $add->password      = bcrypt($data['password']);
+            $add->shw_password  = $data['password'];
+        }
+
+         // Agregamos un arreglo con los dias laborales
+         $stat_type = $type === 'add' ? 'add' : $type;
+         $times = [];
+
+         ($data['status_mon'] == 1) ? $mon = (isset($data['open_mon']) && isset($data['close_mon'])) ? $data['open_mon'].' - '.$data['close_mon'] : 'closed' : $mon = 'closed';
+         ($data['status_tue'] == 1) ? $tue = (isset($data['open_tue']) && isset($data['close_tue'])) ? $data['open_tue'].' - '.$data['close_tue'] : 'closed' : $tue = 'closed';
+         ($data['status_wed'] == 1) ? $wed = (isset($data['open_wed']) && isset($data['close_wed'])) ? $data['open_wed'].' - '.$data['close_wed'] : 'closed' : $wed = 'closed';
+         ($data['status_thu'] == 1) ? $thu = (isset($data['open_thu']) && isset($data['close_thu'])) ? $data['open_thu'].' - '.$data['close_thu'] : 'closed' : $thu = 'closed';
+         ($data['status_fri'] == 1) ? $fri = (isset($data['open_fri']) && isset($data['close_fri'])) ? $data['open_fri'].' - '.$data['close_fri'] : 'closed' : $fri = 'closed';
+         ($data['status_sat'] == 1) ? $sat = (isset($data['open_sat']) && isset($data['close_sat'])) ? $data['open_sat'].' - '.$data['close_sat'] : 'closed' : $sat = 'closed';
+         ($data['status_sun'] == 1) ? $sun = (isset($data['open_sun']) && isset($data['close_sun'])) ? $data['open_sun'].' - '.$data['close_sun'] : 'closed' : $sun = 'closed';
+        
+
+        array_push($times, [
+            'mon' => $mon,
+            'tue' => $tue,
+            'wed' => $wed,
+            'thu' => $thu,
+            'fri' => $fri,
+            'sat' => $sat,
+            'sun' => $sun,
+        ]);
+
+        
+        $add->save();
+
+        // Creamos el QR https://{{$add->dominio}}.kiibo.mx
+        $link_qr        = "https://bincar.kiibo.mx/admin";
+        $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
+
+        $add->qr_code   = $codeQR;
+        $add->save();
+        
+        //Add Times Week
+        $op_times = new Opening_times;
+        $op_times->addNew($times, $add->id);
+
+        $gallery = new UserImage;
+        $gallery->addNew($data,$add->id);
+    }
+
     public function updateMap($data,$id)
     {
         $store = User::find($id);

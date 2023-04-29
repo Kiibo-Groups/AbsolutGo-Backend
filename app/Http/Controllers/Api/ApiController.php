@@ -43,6 +43,7 @@ use DB;
 use Validator;
 use Redirect;
 use Excel;
+use Illuminate\Support\Facades\Log;
 use Stripe;
 use Pusher;
 
@@ -163,6 +164,10 @@ class ApiController extends Controller {
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
+	}
+
+	public function getMainCategories() {
+		return response()->json(['data' => CategoryStore::where('type_cat',0)->orderBy('sort_no','ASC')->get()]);
 	}
 
 	public function getStoreOpen($city_id)
@@ -1141,6 +1146,30 @@ class ApiController extends Controller {
 			/*$data = $request->all();
 
 			return response()->json(['data' => Subscription::find($id)->update($data)]);*/
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
+
+	public function createUser(Request $request) {
+		try {
+			$data = $request->all();
+			$req = new User;
+
+			Log::info($data);
+
+			$data['status_mon'] = 0;
+			$data['status_tue'] = 0;
+			$data['status_wed'] = 0;
+			$data['status_thu'] = 0;
+			$data['status_fri'] = 0;
+			$data['status_sat'] = 0;
+			$data['status_sun'] = 0;
+
+			
+
+			return response()->json(['data' => $req->addNewApi($data, 'add')]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
