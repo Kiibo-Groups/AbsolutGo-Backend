@@ -668,6 +668,16 @@ class ApiController extends Controller {
 		}
 	}
 
+	public function openpayAddSubscription(Request $request) {
+		try {
+			$openpay = new OpenpayController;
+
+			return response()->json(['data' => $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card)]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
+		}
+	}
+
 	public function addBalance(Request $Request)
 	{
 		try {
@@ -705,7 +715,6 @@ class ApiController extends Controller {
 			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
 		}
 	}
-
 
 	/**
 	 *

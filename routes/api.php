@@ -92,6 +92,7 @@ Route::group(array('namespace' => 'Api'), function () {
     Route::post('chargeClient','ApiController@chargeClient');
     Route::post('addBalance','ApiController@addBalance');
     Route::get('openpay/data','ApiController@getOpenpayData');
+    Route::post('openpay/createSubscription', 'ApiController@openpayAddSubscription');
 
     /**
      * Stripe

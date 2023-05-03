@@ -6,8 +6,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use OpenPay\Data\Openpay;
 use Twilio\Rest\Client;
 use App\Admin;
+use App\Item;
 use App\Language;
 class OpenpayController extends BaseController
 {
@@ -89,6 +91,35 @@ class OpenpayController extends BaseController
         );
 
         return $this->CurlGet($data,"https://us-central1-absolut-go.cloudfunctions.net/app/api/chargeClient");
+    }
+
+    public function addSubscription($id_customer, $id_product, $id_card) {
+        $admin = Admin::find(1);
+        $openpay = Openpay::getInstance($admin->openpay_id, $admin->openpay_apikey);
+
+        $product = Item::find($id_product);
+        
+        $planData = [
+            'amount' => $product->small_price,
+            'status_after_retry' => 'cancelled',
+            'retry_times' => 2,
+            'name' => 'Subscripcion ' . $product->name,
+            'repeat_unit' => 'month',
+            'repeat_every' => '1',
+            'currency' => 'MXN'
+        ];
+
+        $plan = $openpay->plans->add($planData);
+
+        $subscriptionData = [
+            'plan_id' => $plan->id,
+            'card_id' => $id_card
+        ];
+
+        $customer = $openpay->customers->get($id_customer);
+        $subscription = $customer->subscriptions->add($subscriptionData);
+
+        return ["plan_id" => $plan->id, "subscription_id" => $subscription->id];
     }
 
     function CurlGet($fields,$url)
