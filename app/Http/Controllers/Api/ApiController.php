@@ -672,7 +672,11 @@ class ApiController extends Controller {
 		try {
 			$openpay = new OpenpayController;
 
-			return response()->json(['data' => $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card)]);
+			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card)];
+
+			
+
+			return response()->json(['data' => );
 		} catch (\Exception $th) {
 			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
 		}
