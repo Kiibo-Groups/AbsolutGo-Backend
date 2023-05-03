@@ -578,114 +578,6 @@ class ApiController extends Controller {
 		return response()->json(['data' => 'done']);
 	}
 
-	/**
-	 * Metodos OpenPay
-	 */
-
-	public function getClient(Request $Request)
-	{
-		try {
-			$openPay = new OpenpayController;
-			return response()->json(['data' => $openPay->getClient($Request->all())]);
-		} catch (\Throwable $th) {
-			return response()->json(['data' => "error"]);
-		}
-	}
-
-	public function SetCardClient(Request $Request)
-	{
-		try {
-			$openpay = new OpenpayController;
-			$req     = $openpay->SetCardClient($Request->all());
-			if ($req['status'] == true) {
-				$user = AppUser::find($Request->get('user_id'));
-				$card = new CardsUser;
-				$data 	 = [
-					'user_id'	 	=> $user->id,
-					'token_card'   	=> $req['data']['id']
-				];
-
-				$card->addNew($data,'add');
-			}
-
-			return response()->json(['data' => $req]);
-		} catch (\Throwable $th) {
-			return response()->json(['data' => "error",'error' => $th]);
-		}
-	}
-
-	public function GetCards(Request $Request)
-	{
-		try {
-			$openpay = new OpenpayController; 
-			return response()->json(['data' => $openpay->getCardsClient($Request->all())]);
-		} catch (\Throwable $th) {
-			return response()->json(['data' => "error"]);
-		}
-	}
-
-	public function DeleteCard(Request $Request)
-	{
-		try {
-			$openpay = new OpenpayController;
-			
-			return response()->json(['data' => $openpay->DeleteCard($Request->all())]);
-		} catch (\Throwable $th) {
-			return response()->json(['data' => "error"]);
-		}
-	}
-
-	public function getCard(Request $Request)
-	{
-		try {
-			$openpay = new OpenpayController;
-			
-			return response()->json(['data' => $openpay->getCard($Request->all())]);
-		} catch (\Throwable $th) {
-			return response()->json(['data' => "error"]);
-		}
-	}
-
-	public function chargeClient(Request $Request)
-	{
-		try {
-			$openpay = new OpenpayController;
-			
-			return response()->json(['data' => $openpay->chargeClient($Request->all())]);
-		} catch (\Exception $th) {
-			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
-		}
-	}
-
-	public function getOpenpayData(Request $request) {
-		try {
-			$admin = Admin::find(1);
-			$data = array("id" => $admin->openpay_id, "apikey" => $admin->openpay_apikey);
-			
-			return response()->json(['data' => $data]);
-		} catch (\Exception $th) {
-			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
-		}
-	}
-
-	public function openpayAddSubscription(Request $request) {
-		try {
-			$openpay = new OpenpayController;
-
-			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card);
-			$data['subscription_table_id'] = Subscription::create([
-				'user_id' => $request->id_user,
-				'product_id' => $request->id_product,
-				'subscription_id' => $data['subscription_id'],
-				'plan_id' => $data['plan_id']
-			])->id;
-
-			return response()->json(['data' => $data]);
-		} catch (\Exception $th) {
-			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
-		}
-	}
-
 	public function addBalance(Request $Request)
 	{
 		try {
@@ -1155,6 +1047,115 @@ class ApiController extends Controller {
 			return response()->json(['data' => Subscription::find($id)->update($data)]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
+	}
+
+	/**
+	 * Metodos OpenPay
+	 */
+
+	public function getClient(Request $Request)
+	{
+		try {
+			$openPay = new OpenpayController;
+			return response()->json(['data' => $openPay->getClient($Request->all())]);
+		} catch (\Throwable $th) {
+			return response()->json(['data' => "error"]);
+		}
+	}
+ 
+	public function SetCardClient(Request $Request)
+	{
+		try {
+			$openpay = new OpenpayController;
+			$req     = $openpay->SetCardClient($Request->all());
+			if ($req['status'] == true) {
+				$user = AppUser::find($Request->get('user_id'));
+				$card = new CardsUser;
+				$data 	 = [
+					'user_id'	 	=> $user->id,
+					'token_card'   	=> $req['data']['id']
+				];
+
+				$card->addNew($data,'add');
+			}
+
+			return response()->json(['data' => $req]);
+		} catch (\Throwable $th) {
+			return response()->json(['data' => "error",'error' => $th]);
+		}
+	}
+ 
+	public function GetCards(Request $Request)
+	{
+		try {
+			$openpay = new OpenpayController; 
+			return response()->json(['data' => $openpay->getCardsClient($Request->all())]);
+		} catch (\Throwable $th) {
+			return response()->json(['data' => "error"]);
+		}
+	}
+
+	public function DeleteCard(Request $Request)
+	{
+		try {
+			$openpay = new OpenpayController;
+			
+			return response()->json(['data' => $openpay->DeleteCard($Request->all())]);
+		} catch (\Throwable $th) {
+			return response()->json(['data' => "error"]);
+		}
+	}
+
+	public function getCard(Request $Request)
+	{
+		try {
+			$openpay = new OpenpayController;
+			
+			return response()->json(['data' => $openpay->getCard($Request->all())]);
+		} catch (\Throwable $th) {
+			return response()->json(['data' => "error"]);
+		}
+	}
+
+	public function chargeClient(Request $Request)
+	{
+		try {
+			$openpay = new OpenpayController;
+			
+			return response()->json(['data' => $openpay->chargeClient($Request->all())]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
+		}
+	}
+
+	public function getOpenpayData(Request $request) {
+		try {
+			$admin = Admin::find(1);
+			$data = array("id" => $admin->openpay_id, "apikey" => $admin->openpay_apikey);
+			
+			return response()->json(['data' => $data]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
+		}
+	}
+
+	public function openpayAddSubscription(Request $request) {
+		try {
+			$openpay = new OpenpayController;
+
+			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card);
+			
+			$data['subscription_table_id'] = Subscription::create([
+				'user_id' => $request->id_user,
+				'product_id' => $request->id_product,
+				'subscription_id' => $data['subscription_id'],
+				'plan_id' => $data['plan_id']
+			])->id;
+
+			return response()->json(['data' => $data]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
 		}
 	}
 
