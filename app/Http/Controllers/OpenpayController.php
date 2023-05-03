@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use OpenPay\Data\Openpay;
 use Twilio\Rest\Client;
 use App\Admin;
+use App\Cart;
 use App\Item;
 use App\Language;
 class OpenpayController extends BaseController
@@ -93,14 +94,16 @@ class OpenpayController extends BaseController
         return $this->CurlGet($data,"https://us-central1-absolut-go.cloudfunctions.net/app/api/chargeClient");
     }
 
-    public function addSubscription($id_customer, $id_product, $id_card) {
+    public function addSubscription($id_customer, $cart_no, $id_card) {
         $admin = Admin::find(1);
         $openpay = Openpay::getInstance($admin->openpay_id, $admin->openpay_apikey);
 
         $product = Item::find($id_product);
         
+        $amount = Cart::where('cart_no', $cart_no)->sum('price');
+
         $planData = [
-            'amount' => $product->small_price,
+            'amount' => $amount,
             'status_after_retry' => 'cancelled',
             'retry_times' => 2,
             'name' => 'Subscripcion ' . $product->name,
