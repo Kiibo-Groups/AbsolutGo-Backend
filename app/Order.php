@@ -74,7 +74,7 @@ class Order extends Authenticatable
             $pattern = $add->id.'1234567890'.$data['cart_no'];
             $key = substr(md5($pattern),0,8);
             // Creamos el QR https://{{$add->dominio}}.kiibo.mx
-            $link_qr        = "https://bincar.kiibo.mx/track_order?id=".strtoupper($key);
+            $link_qr        = "https://absolutgo.kiibo.mx/track_order?id=".strtoupper($key);
             $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
 
             $add->code_order   = $codeQR;
@@ -216,6 +216,7 @@ class Order extends Authenticatable
 
          return  $url;
       }
+
    }
 
    public function getStore($cartNo)

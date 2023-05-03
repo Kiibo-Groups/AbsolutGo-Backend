@@ -146,6 +146,7 @@ Route::group(array('namespace' => 'Api'), function () {
      */
     Route::post('subscription/create', 'ApiController@createSubscription');
     Route::get('subscription/', 'ApiController@readSubscriptions');
+    Route::get('subscription/{id}', 'ApiController@readSubscription');
     Route::post('subscription/update/{id}', 'ApiController@updateSubscription');
     Route::post('subscription/delete/{id}', 'ApiController@deleteSubscription');
 

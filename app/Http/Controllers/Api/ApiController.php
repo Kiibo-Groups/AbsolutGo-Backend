@@ -436,8 +436,15 @@ class ApiController extends Controller {
 	public function order(Request $Request)
 	{
 		try {
+			$data = $Request->all();
 			$res = new Order;
-			return response()->json($res->addNew($Request->all()));
+			$result = $res->addNew($data);
+
+			$subdata = null;
+			if($data['subscription'])
+				$subdata = $this->openpayAddSubscription($Request);
+
+			return response()->json(["order" => $res->addNew($Request->all()), "subscription" => $subdata]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error', 'error' => $th->getMessage()]);
 		}
@@ -1030,6 +1037,14 @@ class ApiController extends Controller {
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
+	}
+
+	public function readSubscription($id) {
+		try {
+			return response()->json(['data' => Subscription::find($id)]);
+		} catch (\Exception $th) {
+			return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		}
 	} 
 
 	public function deleteSubscription($id) {
@@ -1148,7 +1163,7 @@ class ApiController extends Controller {
 			
 			$data['subscription_table_id'] = Subscription::create([
 				'user_id' => $request->id_user,
-				'product_id' => $request->id_product,
+				'cart_no' => $request->cart_no,
 				'subscription_id' => $data['subscription_id'],
 				'plan_id' => $data['plan_id']
 			])->id;
@@ -1184,8 +1199,6 @@ class ApiController extends Controller {
 			$data['status_fri'] = 0;
 			$data['status_sat'] = 0;
 			$data['status_sun'] = 0;
-
-			
 
 			return response()->json(['data' => $req->addNewApi($data, 'add')]);
 		} catch (\Exception $th) {

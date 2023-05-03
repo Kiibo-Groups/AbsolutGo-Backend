@@ -12,7 +12,7 @@ class Subscription extends Authenticatable
 
     protected $fillable = [
         'user_id',
-        'product_id',
+        'cart_no',
         'subscription_id',
         'date_subscription_pay',
         'time_subscription',
