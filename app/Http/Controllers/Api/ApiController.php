@@ -672,11 +672,15 @@ class ApiController extends Controller {
 		try {
 			$openpay = new OpenpayController;
 
-			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card)];
+			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card);
+			$data['subscription_table_id'] = Subscription::create([
+				'user_id' => $request->id_user,
+				'product_id' => $request->id_product,
+				'subscription_id' => $data['subscription_id'],
+				'plan_id' => $data['plan_id']
+			])->id;
 
-			
-
-			return response()->json(['data' => );
+			return response()->json(['data' => $data]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => "error",'msg' => $th->getMessage()]);
 		}
