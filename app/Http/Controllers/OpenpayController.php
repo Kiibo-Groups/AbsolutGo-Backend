@@ -97,8 +97,6 @@ class OpenpayController extends BaseController
     public function addSubscription($id_customer, $cart_no, $id_card) {
         $admin = Admin::find(1);
         $openpay = Openpay::getInstance($admin->openpay_id, $admin->openpay_apikey);
-
-        $product = Item::find($id_product);
         
         $amount = Cart::where('cart_no', $cart_no)->sum('price');
 
@@ -106,7 +104,7 @@ class OpenpayController extends BaseController
             'amount' => $amount,
             'status_after_retry' => 'cancelled',
             'retry_times' => 2,
-            'name' => 'Subscripcion ' . $product->name,
+            'name' => 'Subscripcion ' . $cart_no,
             'repeat_unit' => 'month',
             'repeat_every' => '1',
             'currency' => 'MXN'

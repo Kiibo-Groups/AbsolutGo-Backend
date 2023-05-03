@@ -215,6 +215,8 @@ class Order extends Authenticatable
          /** Notificamos al panel de control */
 
          return  $url;
+      } else {
+         return ['data' => "Not_service"];
       }
 
    }

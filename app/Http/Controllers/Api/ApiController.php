@@ -441,7 +441,7 @@ class ApiController extends Controller {
 			$result = $res->addNew($data);
 
 			$subdata = null;
-			if($data['subscription'])
+			if(!isset($result['data']) && $result['data'] != "Not_service" && $data['subscription'])
 				$subdata = $this->openpayAddSubscription($Request);
 
 			return response()->json(["order" => $res->addNew($Request->all()), "subscription" => $subdata]);
@@ -1159,7 +1159,7 @@ class ApiController extends Controller {
 		try {
 			$openpay = new OpenpayController;
 
-			$data = $openpay->addSubscription($request->id_customer, $request->id_product, $request->id_card);
+			$data = $openpay->addSubscription($request->id_customer, $request->cart_no, $request->id_card);
 			
 			$data['subscription_table_id'] = Subscription::create([
 				'user_id' => $request->id_user,
