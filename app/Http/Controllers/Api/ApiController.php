@@ -1033,7 +1033,7 @@ class ApiController extends Controller {
 
 	public function readSubscriptions(Request $request) {
 		try {
-			return response()->json(['data' => Subscription::get()]);
+			return response()->json(['data' => Subscription::where('user_id', $request->user_id)->get()]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
