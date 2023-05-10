@@ -1,23 +1,23 @@
 
-<div class="form-row">
-<input type="text" name="deliveryVia" value="admin" hidden>
+<div class="row">
+	<input type="text" name="deliveryVia" value="admin" hidden>
 
-<div class="form-group col-md-6">
-<label for="name">Nombre</label>
-{!! Form::text('name',null,['id' => 'name','class' => 'form-control','required' => 'required'])!!}
-</div>
-<div class="form-group col-md-6">
-<label for="city_id">Ciudad</label>
-<select name="city_id" id="city_id" class="form-control" required="required">
-<option value="">Seleccionar Ciudad</option>
-@foreach($citys as $city)
-<option value="{{ $city->id }}" @if($data->city_id == $city->id) selected @endif>{{ $city->name }}</option>
-@endforeach
-</select>
-</div>
+	<div class="form-group col-md-6">
+		<label for="name">Nombre</label>
+		{!! Form::text('name',null,['id' => 'name','class' => 'form-control','required' => 'required'])!!}
+	</div>
+	<div class="form-group col-md-6">
+		<label for="city_id">Ciudad</label>
+		<select name="city_id" id="city_id" class="form-control" required="required">
+		<option value="">Seleccionar Ciudad</option>
+			@foreach($citys as $city)
+				<option value="{{ $city->id }}" @if($data->city_id == $city->id) selected @endif>{{ $city->name }}</option>
+			@endforeach
+		</select>
+	</div>
 </div>
 
-<div class="form-row">
+<div class="row">
 	<div class="form-group col-md-6">
 		<label for="phone">Telefono (This will be username)</label>
 		{!! Form::text('phone',null,['id' => 'phone','class' => 'form-control','required' => 'required'])!!}
@@ -29,7 +29,7 @@
 	</div>
 </div>
 
-<div class="form-row">
+<div class="row">
 	
 	<div class="form-group col-md-6">
 		@if($data->id)

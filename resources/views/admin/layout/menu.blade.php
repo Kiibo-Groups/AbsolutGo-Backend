@@ -203,6 +203,19 @@
   </li>
   <!-- Gestion de pedidos -->
   
+  <!-- Repartidores -->
+  @if($admin->hasPerm('Repartidores'))
+  <li class="nav-item">
+    <a class="nav-link  @if($page === 'delivery') active @else collapsed @endif" href="{{ Asset(env('admin').'/delivery') }}">
+      <i class="bx bxs-package"></i>
+      <span>Repartidores</span>
+    </a>
+  </li>
+ 
+  @endif
+  <!-- Repartidores -->
+
+
   <!-- Reporte de ventas -->
   @if($admin->hasPerm('Reportes de ventas'))
   <li class="nav-item">

@@ -65,6 +65,7 @@ class Delivery extends Authenticatable
             $add->store_id          = 0;
         }
 
+        $add->external_id       = 'null';
         $add->name              = isset($data['name']) ? $data['name'] : '';
         $add->phone             = isset($data['phone']) ? $data['phone'] : '';
         $add->c_type_staff      = isset($data['c_type_staff']) ? $data['c_type_staff'] : '';
@@ -72,7 +73,7 @@ class Delivery extends Authenticatable
         $add->type_driver       = isset($data['type_driver']) ? $data['type_driver'] : 0;
         $add->max_range_km      = isset($data['max_range_km']) ? $data['max_range_km'] : 1;
         $add->rfc               = isset($data['rfc']) ? $data['rfc'] : '';
-
+        $add->amount_acum       = 0;
         if ($from == 'app') {
             $add->status = 1; // Bloqueado
             $add->status_admin = 1; // Bloqueado
@@ -80,6 +81,8 @@ class Delivery extends Authenticatable
             $add->status            = isset($data['status']) ? $data['status'] : 0;
             $add->status_admin            = isset($data['status_admin']) ? $data['status_admin'] : 0;
         }
+
+        $add->status_send = 0;
 
         if(isset($data['password']))
         {

@@ -76,11 +76,12 @@
         </button>
         
         <ul class="dropdown-menu"  style="margin: 0px; position: absolute; inset: 0px auto auto 0px; transform: translate(0px, 38px);" data-popper-placement="bottom-start">
+             
             <li>
-                <a href="{{ Asset(env('admin').'/orderStatus?id='.$row->id.'&status=1.5') }}" onclick="return confirm('Are you sure?')" class="dropdown-item">
-                    Comenzar a preparar
+                <a href="javascript::void()" data-bs-toggle="modal" data-bs-target="#assignModalStaff{{ $row->id }}" class="dropdown-item">
+                    Asignar Repartidor
                 </a>
-            </li> 
+            </li>
             <li>
                 <a href="{{ Asset(env('admin').'/order/print/'.$row->id) }}" class="dropdown-item">
                     Imprimir Recibo
@@ -112,18 +113,17 @@
         
         <ul class="dropdown-menu"  style="margin: 0px; position: absolute; inset: 0px auto auto 0px; transform: translate(0px, 38px);" data-popper-placement="bottom-start">
             @if($row->type == 1) <!-- A domicilio -->
-                @if($row->status == 1.5)
-                    <li>
-                        <a href="{{ Asset(env('admin').'/orderStatus?id='.$row->id.'&status=3') }}" onclick="return confirm('Are you sure?')" class="dropdown-item">
-                            Marcar pedido en ruta
-                        </a>
-                    </li>
-                @elseif($row->status == 3)
-                    <li>
-                        <a href="{{ Asset(env('admin').'/orderStatus?id='.$row->id.'&status=5') }}" onclick="return confirm('Are you sure?')" class="dropdown-item">
-                            Entregar Pedido
-                        </a>
-                    </li>
+                <li>
+                    <a href="javascript::void()" data-toggle="modal" data-target="#slideRightModalStaff{{ $row->id }}" class="dropdown-item">
+                        Solicitar Repartidor
+                    </a>
+                </li>
+                @if($row->status == 3 || $row->status == 4)
+                <li>
+                    <a href="javascript::void()" data-toggle="modal" data-target="#assignModalStaff{{ $row->id }}" class="dropdown-item">
+                        Asignar Repartidor Unico
+                    </a>
+                </li>
                 @endif
                 <li>
                     <a href="{{ Asset(env('admin').'/order/print/'.$row->id) }}" class="dropdown-item">

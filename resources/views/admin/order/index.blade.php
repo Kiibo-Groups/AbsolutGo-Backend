@@ -26,9 +26,8 @@
                             @foreach($data as $row)
                             @include('admin.order.viewElements')
                             <tr>
- 
                                 <td width="5%">
-                                    {{ $row->external_id }}
+                                    {{ $row->code_order }}
                                 </td>
                                 <td width="15%">{{ $row->store }}</td>
                                 <td width="15%">
