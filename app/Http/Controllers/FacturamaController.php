@@ -19,16 +19,14 @@ class FacturamaController extends BaseController
 
     private $public_key;
     private $private_key;
-    private $endpoint = "https://apisandbox.facturama.mx/";
+    private $endpoint = "https://api.facturama.mx/";
     private $facturama;
 
 
-    
-
     public function __construct()
     {
-        $this->facturama = new Facturama\Client('KiiboGroups', 'KiiboGroups1106');
-        
+        $this->facturama = new Facturama\Client('AbsolutGo', 'totalin126!');
+        $this->facturama->setApiUrl('https://api.facturama.mx');
     }
     
     /**
@@ -38,35 +36,39 @@ class FacturamaController extends BaseController
     function addClient($data, $type)
 	{
         try {
-            $params = array(
-                'Id'                => ($type == 'new') ? '' : $data['clientId'],
-                'Rfc'             => strtoupper($data['Rfc']),
-                'Name'            => strtoupper($data['Name']),
-                'Email'           => $data['Email'],
-                'FiscalRegime'    => $data['FiscalRegime'],
-                'CfdiUse'         => $data['CfdiUse'],
-                'TaxZipCode'      => ucwords($data['ZipCode']),
-                'TaxResidence'    => ucwords($data['ZipCode']),
-                'NumRegIdTrib'    => ucwords($data['ZipCode']),
-                'Address' => array(
-                    'Street'          => (isset($data['Street'])) ? $data['Street'] : 'General',
-                    'ExteriorNumber'  => (isset($data['ExteriorNumber'])) ? $data['ExteriorNumber'] : '123',
-                    'InteriorNumber'  => (isset($data['InteriorNumber'])) ? $data['InteriorNumber'] : '123',
-                    'Neighborhood'    => (isset($data['Neighborhood'])) ? $data['Neighborhood'] : 'monterrey',
-                    'ZipCode'         => (isset($data['ZipCode'])) ? $data['ZipCode'] : '64000',
-                    'Locality'        => (isset($data['Locality'])) ? $data['Locality'] : 'nuevo leon',
-                    'Municipality'    => (isset($data['Municipality'])) ? $data['Municipality'] : 'nuevo leon',
-                    'State'           => (isset($data['State'])) ? $data['State'] : 'Monterrey',
-                    'Country'         => 'MX',
-                ),
-            );
+            // $params = array(
+            //     'Id'                => ($type == 'new') ? '' : $data['clientId'],
+            //     'Rfc'             => strtoupper($data['Rfc']),
+            //     'Name'            => strtoupper($data['Name']),
+            //     'Email'           => $data['Email'],
+            //     'FiscalRegime'    => $data['FiscalRegime'],
+            //     'CfdiUse'         => $data['CfdiUse'],
+            //     'TaxZipCode'      => ucwords($data['ZipCode']),
+            //     'TaxResidence'    => ucwords($data['ZipCode']),
+            //     'NumRegIdTrib'    => ucwords($data['ZipCode']),
+            //     'Address' => array(
+            //         'Street'          => (isset($data['Street'])) ? $data['Street'] : 'General',
+            //         'ExteriorNumber'  => (isset($data['ExteriorNumber'])) ? $data['ExteriorNumber'] : '123',
+            //         'InteriorNumber'  => (isset($data['InteriorNumber'])) ? $data['InteriorNumber'] : '123',
+            //         'Neighborhood'    => (isset($data['Neighborhood'])) ? $data['Neighborhood'] : 'monterrey',
+            //         'ZipCode'         => (isset($data['ZipCode'])) ? $data['ZipCode'] : '64000',
+            //         'Locality'        => (isset($data['Locality'])) ? $data['Locality'] : 'nuevo leon',
+            //         'Municipality'    => (isset($data['Municipality'])) ? $data['Municipality'] : 'nuevo leon',
+            //         'State'           => (isset($data['State'])) ? $data['State'] : 'Monterrey',
+            //         'Country'         => 'MX',
+            //     ),
+            // );
 
-            // Realizamos la consulta
-            if ($type == 'new') {
-                return $params;  //$this->facturama->post('Client', $params);
-            }else {
-                return $this->facturama->put('Client/'.$data['clientId'], $params);
-            }
+            // // Realizamos la consulta
+            // if ($type == 'new') {
+            //     return $params;  //$this->facturama->post('Client', $params);
+            // }else {
+            //     return $this->facturama->put('Client/'.$data['clientId'], $params);
+            // }
+
+            $params = [];
+
+            return $facturama->get('api/suscriptionPlan/', $params);
         } catch (\Exception $th) {
             return $th->getMessage();
         }

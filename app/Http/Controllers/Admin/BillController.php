@@ -110,12 +110,12 @@ class BillController extends Controller
     {
         $res = new FacturamaController;
 
-        // return response()->json(['data' => $res->getClients()]);
+        return response()->json(['data' => $res->getClients()]);
 
-        return View($this->folder.'list_clients',[
-            'data' => $res->getClients(),
-            'link' => env('admin').'/bill_clients/'
-        ]);
+        // return View($this->folder.'list_clients',[
+        //     'data' => $res->getClients(),
+        //     'link' => env('admin').'/bill_clients/'
+        // ]);
     }
 
     public function addClient()

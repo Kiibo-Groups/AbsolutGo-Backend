@@ -50,8 +50,7 @@ class WhatsAppCloud extends BaseController
                 )
             ), 
         );
-
-        
+ 
  
         return $this->CurlGet($fields,"https://graph.facebook.com/v13.0/105545148849246/messages/");
 	

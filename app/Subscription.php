@@ -12,100 +12,34 @@ class Subscription extends Authenticatable
 
     protected $fillable = [
         'user_id',
-        'cart_no',
+        'product_id',
         'subscription_id',
         'date_subscription_pay',
         'time_subscription',
         'plan_id',
     ];
+ 
 
-     /*
-    |--------------------------------------
-    |Add/Update Data
-    |--------------------------------------
-    */
-    public function addNew($data,$type)
+    public function addNew($order_id, $user_id, $suscription)
     {
-        $add                    = $type === 'add' ? new Banner : Banner::find($type);
-        $add->city_id           = isset($data['city_id']) ? $data['city_id'] : 0;
-        $add->status            = isset($data['status']) ? $data['status'] : 0;
-        $add->design_type       = isset($data['design_type']) ? $data['design_type'] : 0;
-        $add->position          = isset($data['position']) ? $data['position'] : 0;
+       
+        $orderItems = OrderItem::where('order_id',$order_id)->get();
 
-        if(isset($data['img']))
-        {
-            $filename   = time().rand(111,699).'.' .$data['img']->getClientOriginalExtension(); 
-            $data['img']->move("upload/banner/", $filename);   
-            $add->img = $filename;   
-        }
+        if (count($orderItems) > 0) {
+            foreach ($orderItems as $key) {
+                $add                    = new Subscription;
+                $add->user_id           = $user_id;
+                $add->product_id        = $key->item_id;
+                $add->subscription_id   = $suscription['subscription']['data']['plan_id'];
+                $add->date_subscription_pay = $suscription['plan']['data']['creation_date'];
+                $add->time_subscription = 30;
+                $add->plan_id           = $suscription['plan']['data']['id'];
 
-        $add->save();
-
-        $store = new BannerStore;
-        $store->addNew($data,$add->id);
-    }
-
-    /*
-    |--------------------------------------
-    |Get all data from db
-    |--------------------------------------
-    */
-    public function getAll($city = 0,$type = 'all')
-    {
-        return Banner::where(function($query) use($city,$type){
-
-            if($type !== 'all')
-            {
-                $query->where('banner.position',$type);
+                $add->save();
             }
-
-            if($city > 0)
-            {
-                $query->where('banner.status',0)->whereIn('banner.city_id',[0,$city]);
-            }
-
-
-        })->leftjoin('city','banner.city_id','=','city.id')
-                     ->select('city.name as city','banner.*')
-                     ->orderBy('id','DESC')->get();
-    }
-
-    public function getPosition($type)
-    {
-        if($type == 0)
-        {
-            $return = "Top";
-        }
-        elseif($type == 1)
-        {
-            $return = "Middle";
-        }
-        else
-        {
-            $return = "Bottom";
         }
 
-        return $return;
-    }
+        return true;
 
-    public function getAppData($id,$type)
-    {
-        $data = [];
-
-        foreach($this->getAll($id,$type) as $row)
-        {
-            $link   = BannerStore::where('banner_id',$row->id)->pluck('store_id')->toArray();
-            $data[] = [
-
-            'id'        => $row->id,
-            'img'       => Asset('upload/banner/'.$row->img),
-            'type'      => $row->design_type,
-            'position'  => $row->position,
-            'link'      => count($link) > 0 ? true : false
-
-            ];
-        }
-
-        return $data;
     }
 }

@@ -28,9 +28,7 @@
                             <tr>
  
                                 <td width="5%">
-                                    <a href="https://bincar.kiibo.mx/track_order/?id={{ $row->external_id }}" target="_blank">
-                                        <img src="data:image/png;base64,{{ $row->code_order }}" style="width:50px;height: 50px;max-width:none !important;">
-                                    </a> 
+                                    {{ $row->external_id }}
                                 </td>
                                 <td width="15%">{{ $row->store }}</td>
                                 <td width="15%">
@@ -38,11 +36,7 @@
                                     <small>Tel: {{ $row->phone }}</small>    
                                 </td>
                                 <td width="20%">	
-                                    @if($row->InnStore == 1)
-                                        <span>Pedido en mesa <b>#{{$row->mesa}}</b></span><br>
-                                    @endif 
-                                
-                                    @if($row->status == 0 )
+                                    @if($row->status == 0 || $row->status == 8)
                                     <span class="badge bg-success text-white">Pedido Nuevo</span>
                                     @elseif($row->status == 1)
                                     <span class="badge bg-primary text-white">Pedido Aceptado</span>

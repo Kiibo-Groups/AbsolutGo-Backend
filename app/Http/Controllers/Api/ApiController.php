@@ -260,7 +260,7 @@ class ApiController extends Controller {
 	public function cartCount($cartNo)
 	{
 		try {
-			$order = Order::where('cart_no',$cartNo)->whereIn('status',[0,1,1.5,3,4,5])->count();
+			$order = Order::where('cart_no',$cartNo)->whereIn('status',[0,1,1.5,3,4,5,8])->count();
 
 			$cart = new Cart;
 			$req  = new Order;
@@ -268,7 +268,7 @@ class ApiController extends Controller {
 			return response()->json([
 				'data'  => Cart::where('cart_no',$cartNo)->count(),
 				'order' => $order,
-				'data_order' => ($order > 0) ? Order::where('cart_no',$cartNo)->whereIn('status',[0,1,1.5,3,4,5])->first()->external_id : '',
+				'data_order' => ($order > 0) ? Order::where('cart_no',$cartNo)->whereIn('status',[0,1,1.5,3,4,5,8])->first()->external_id : '',
 				'list_orders' => ($order > 0) ? $req->getListOrder($cartNo) : [],
 				'cart'	=> $cart->getItemQty($cartNo)
 			]);
@@ -433,18 +433,14 @@ class ApiController extends Controller {
 		]); 
 	}
 
-	public function order(Request $Request)
+	public function order(Request $request)
 	{
-		try {
-			$data = $Request->all();
+		try { 	
+		
+			$data = $request->all();
 			$res = new Order;
-			$result = $res->addNew($data);
 
-			$subdata = null;
-			if(!isset($result['data']) && $result['data'] != "Not_service" && $data['subscription'])
-				$subdata = $this->openpayAddSubscription($Request);
-
-			return response()->json(["order" => $res->addNew($Request->all()), "subscription" => $subdata]);
+			return $res->addNew($data);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error', 'error' => $th->getMessage()]);
 		}
@@ -1033,7 +1029,18 @@ class ApiController extends Controller {
 
 	public function readSubscriptions(Request $request) {
 		try {
-			return response()->json(['data' => Subscription::where('user_id', $request->user_id)->get()]);
+
+			$openPay = new OpenpayController;
+			$req = Subscription::where('user_id', $request->user_id)->select('subscription_id')->distinct()->get();
+			$data = [];
+			foreach ($req as $key) {
+				$data[] = $openPay->getPlan($key->subscription_id);
+			}
+
+			return response()->json([
+				'req' => $req,
+				'data' => $data
+			]);
 		} catch (\Exception $th) {
 			return response()->json(['data' => 'error','error' => $th->getMessage()]);
 		}
@@ -1155,11 +1162,11 @@ class ApiController extends Controller {
 		}
 	}
 
-	public function openpayAddSubscription(Request $request) {
+	public function openpayAddSubscription(Request $request,$order_id) {
 		try {
 			$openpay = new OpenpayController;
 
-			$data = $openpay->addSubscription($request->id_customer, $request->cart_no, $request->id_card);
+			$data = $openpay->addSubscription($order_id,$request->id_customer, $request->cart_no, $request->id_card);
 			
 			$data['subscription_table_id'] = Subscription::create([
 				'user_id' => $request->id_user,

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Http\Controllers\NodejsServer;
+use App\Http\Controllers\OpenpayController;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode; 
 use Illuminate\Notifications\Notifiable;
@@ -47,14 +48,12 @@ class Order extends Authenticatable
          $add->cart_no        = $data['cart_no'];
          $add->user_id        = $data['user_id'];
          $add->store_id       = $this->getStore($data['cart_no']);
-         $add->name           = isset($data['user_name']) ? $data['user_name'] : 'Indefinido';
-         $add->email          = isset($data['user_email']) ? $data['user_email'] : 'Indefinido';
-         $add->phone          = isset($data['user_phone']) ? $data['user_phone'] : 'Indefinido';
+         $add->name           = isset($data['user_id']) ? AppUser::find($data['user_id'])->name : 'Indefinido';
+         $add->email          = isset($data['user_id']) ? AppUser::find($data['user_id'])->email : 'Indefinido';
+         $add->phone          = isset($data['user_id']) ? AppUser::find($data['user_id'])->phone : 'Indefinido';
          $add->address        = isset($data['address']) ? $data['address'] : 'Indefinido';
          $add->lat            = isset($data['lat']) ? $data['lat'] : null;
-         $add->lng            = isset($data['lng']) ? $data['lng'] : null;
-         $add->reallat        = isset($data['real_lat']) ? $data['real_lat'] : 0;
-         $add->reallng        = isset($data['real_lng']) ? $data['real_lng'] : 0;
+         $add->lng            = isset($data['lng']) ? $data['lng'] : null; 
          $add->InnStore       = isset($data['InnStore']) ? $data['InnStore'] : 0;
          $add->mesa           = isset($data['mesa']) ? $data['mesa'] : 0;
          $add->type           = isset($data['otype']) ? $data['otype'] : 1;
@@ -67,6 +66,9 @@ class Order extends Authenticatable
          $add->payment_id     = isset($data['payment_id']) ? $data['payment_id'] : 0;
          $add->notes          = isset($data['notes']) ? $data['notes'] : '';
          $add->status         = 8;
+
+         $add->code_order     = "null";
+         $add->external_id    = "null";
          $add->save();
 
          /** Generamos Codigo de entrega */
@@ -74,10 +76,10 @@ class Order extends Authenticatable
             $pattern = $add->id.'1234567890'.$data['cart_no'];
             $key = substr(md5($pattern),0,8);
             // Creamos el QR https://{{$add->dominio}}.kiibo.mx
-            $link_qr        = "https://absolutgo.kiibo.mx/track_order?id=".strtoupper($key);
-            $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
+            // $link_qr        = "https://absolutgo.kiibo.mx/track_order?id=".strtoupper($key);
+            // $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
 
-            $add->code_order   = $codeQR;
+            $add->code_order   = strtoupper($key);
             $add->external_id = strtoupper($key);
             $add->save();
          /** Generamos Codigo de entrega */
@@ -94,127 +96,29 @@ class Order extends Authenticatable
 
          $admin = Admin::find(1);
 
-         /** Generamos el Enlace para el envio del Whatsapp */
-            $dnl = "\r\n";
-            $ddnl = "\n\n";
-            $nl="\n";
-            $tabSpace="      ";
-
-            $msg = 'Nuevo Pedido #'.$add->id.$dnl;
-            $msg .= "Fecha ".date('d-M-Y',strtotime($add->created_at))." | ".date('h:i:A',strtotime($add->created_at)).$ddnl;
-
-            $msg .= "Hola, Vengo de https://".$store->dominio.".kiibo.mx".$ddnl;
-
-            $msg .= "* Tipo de servicio: ";
-            $msg .= ($add->type == 1) ? " Servicio a domcilio".$dnl : " Recoger en Tienda *".$dnl;
-
-            $msg .= $nl;
-
-            $msg .= "Nombre: ".$add->name.$dnl;
-            $msg .= "Telefono: ".$add->phone.$dnl;
-            $msg .= "Dirección: ".$add->address.$dnl;
-
-            $msg .= $nl;
-            if($add->type == 1)
-            {
-               $msg .= "(Negocio) - Compartir con tu repartidor";
-               $msg .= $nl;
-               $msg .= "https://www.google.com/maps/dir/".$store->lat.",".$store->lng."/".$add->lat.",".$add->lng;
-               $msg .= $nl;
-               $msg .= $nl;
-            }
-            
-            
-            $msg .= "Ubicación real del dispositivo";
-            $msg .= $nl;
-            $msg .= "https://www.google.com/maps?q=".$add->reallat.",".$add->reallng.$nl;
-            $msg .= $nl;
-
-            $msg .= "Método de pago solicitado: ";
-            if ($add->payment_method == 1) { // Pago en Efectivo
-               $msg .= "Pago en Efectivo".$dnl;
-            }
-
-            if ($add->payment_method == 2) { // Pago via Stripe
-               $msg .= "Pago con Tarjeta de Crédito/Débito: ".$dnl;
-               $msg .= "ID del pago: ".$add->payment_id.$dnl;
-            }
- 
-            $msg .= $nl;
-            $msg .= "Costos: ".$dnl;
-            $msg .= $nl;
-            $msg .= "Costo de los productos: $".($item->getTotal($add->id) - $add->discount).$dnl;
-
-            if ($add->type == 1) {
-               $msg .= "Costo de envio: $".$add->d_charges.$dnl;
-            }
-            
-            if ($add->payment_method == 2) {
-               $msg .= "Cargos por pago con tarjeta: $".$admin->comm_stripe."%".$dnl;
-            }
-
-            $msg .= "Total a pagar: $".$add->total.$dnl;
-
-            $msg .= $nl;  
-            $msg .= "Pedido".$dnl;
-            $msg .= $nl;
-
-            $prods = Cart::where('cart_no',$data['cart_no'])->get();
-            foreach($prods as $row)
-            {
-               $item_prod        = Item::find($row->item_id);
-               $msg .= "* x".$row->qty." ".$item_prod->name."  $".$row->price.$ddnl;
-               
-               // Complementos
-               $addons = CartAddon::where('cart_id',$row->id)->get();
-               
-               if (count($addons) > 0) {
-                  $msg .= "    Complementos: ".$dnl;
-               
-                  foreach ($addons as $ads) {
-                     
-                     $addon = Addon::find($ads->addon_id);
-
-                     $msg .= "    x".$ads->qty." ".$addon->name."  $".$addon->price;
-                  }
-
-                  $msg .= $ddnl;
-                  $msg .= "---------------------------------".$ddnl;
-               
-               }
-            }
-
-            $msg .= $nl;
-            $msg .= $nl; 
-
-            $msg .= "Para darle seguimiento al pedido, ingresa ha: ".$link_qr;
-            
-            $msg .= $nl; 
-            $msg .= "Envía este mensaje. Te atenderemos enseguida.";
-
-
-            // Quitamos espacios del telefiono
-            $phone = str_replace(' ','',$store->phone);
-            $phone = str_replace('-','',$store->phone);
-            $phone = str_replace('+','',$store->phone);
-
-            $url = 'https://wa.me/+521'.$phone.'?text='.urlencode($msg);
-         /** Generamos el Enlace para el envio del Whatsapp */
-
          /** Eliminamos el carrito y los cupones en caso de existir */
             Cart::where('cart_no',$data['cart_no'])->delete();
             CartAddon::where('cart_id',$data['cart_no'])->delete();
             CartCoupen::where('cart_no',$data['cart_no'])->delete();
          /** Eliminamos el carrito y los cupones en caso de existir */
 
-         /** Notificamos al panel de control */ 
-         $title = "Nuevo pedido recibido!!";
-         $message = " 🎉 Nuevo pedido recibido 🎉 #".$add->id." valor del pedido $".$add->total;
+         /** Validamos si existe alguna suscripcion de compra */
+         
+			$openpay = new OpenpayController;
+			$newSuscript = new Subscription; 
 
-         app('App\Http\Controllers\Controller')->sendWeb($title,$message,strval($store->id));
-         /** Notificamos al panel de control */
+         if ($data['suscript']) {					
+            // Creamos el plan y su suscripcion
+            $suscript = $openpay->addSubscription($add->id,$data['id_customer'], $data['cart_no'], $data['id_card']);
+            // Agregamos los productos a la suscripcion
+            $newSuscript->addNew($add->id,$data['user_id'],$suscript);
+            return response()->json(['data' => 'success', 'order_id' => $add->id ,'suscript' => true]);
+         }else {
+            return response()->json(['data' => 'success', 'order_id' => $add->id,'suscript' => "not_suscript"]);
+         }
+         /** Validamos si existe alguna suscripcion de compra */
 
-         return  $url;
+ 
       } else {
          return ['data' => "Not_service"];
       }
@@ -499,7 +403,7 @@ class Order extends Authenticatable
    {
       $req = Order::where(function($query) use($id){
          $query->where('orders.cart_no',$id);
-         $query->whereIn('orders.status',[0,1,1.5,3,4,5]);
+         $query->whereIn('orders.status',[0,1,1.5,3,4,5,8]);
      })->orderBy('id','DESC')
      ->get();
      

@@ -26,9 +26,7 @@
                             @include('user.order.info_pay')
                             <tr> 
                                 <td>
-                                    <a href="https://bincar.kiibo.mx/track_order/?id={{$row->external_id}}" target="_blank">
-                                        <img src="data:image/png;base64,{{ $row->code_order }}" style="width:50px;height: 50px;max-width:none !important;">
-                                    </a> 
+                                    {{ $row->external_id }}
                                 </td>
                                 <td>{{ $row->name }}<br>{{ $row->phone }}</td>
                                 @if($row->type == 1)

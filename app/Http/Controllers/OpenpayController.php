@@ -5,17 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use OpenPay\Data\Openpay;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests; 
+  
 use Twilio\Rest\Client;
 use App\Admin;
+use App\Order;
 use App\Cart;
 use App\Item;
 use App\Language;
+ 
 class OpenpayController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
 
     // Agregamos al Cliente
     function addClient($data)
@@ -94,33 +95,53 @@ class OpenpayController extends BaseController
         return $this->CurlGet($data,"https://us-central1-absolut-go.cloudfunctions.net/app/api/chargeClient");
     }
 
-    public function addSubscription($id_customer, $cart_no, $id_card) {
-        $admin = Admin::find(1);
-        $openpay = Openpay::getInstance($admin->openpay_id, $admin->openpay_apikey);
+    // Creacion de Plan y Suscripcion
+    public function addSubscription($order_id, $id_customer, $cart_no, $id_card) {
         
-        $amount = Cart::where('cart_no', $cart_no)->sum('price');
-
-        $planData = [
-            'amount' => $amount,
+        $order   = Order::find($order_id);
+        // Objeto para el nuevo  Plan
+        $fields = array(
+            'amount' => $order->total,
             'status_after_retry' => 'cancelled',
             'retry_times' => 2,
-            'name' => 'Subscripcion ' . $cart_no,
+            'name' => 'Subscripcion ' . $order->external_id,
             'repeat_unit' => 'month',
             'repeat_every' => '1',
             'currency' => 'MXN'
-        ];
+        );
+        // Creamos Plan
+        $plan = $this->CurlGet($fields,"https://us-central1-absolut-go.cloudfunctions.net/app/api/newPlan");
 
-        $plan = $openpay->plans->add($planData);
+        // Si el plan se creo
+        if ($plan['status']) {
+            $data = $plan['data'];
 
-        $subscriptionData = [
-            'plan_id' => $plan->id,
-            'card_id' => $id_card
-        ];
+            // Creamos el objeto para la nueva suscripcion
+            $subscriptionDataRequest = [
+                'plan_id'   => $data['id'], // Id del plan devuelto
+                'source_id' => $id_card, // Id de la tarjeta
+                'customer_id' => $id_customer // Id del usuario
+            ];
+            // Creamos la suscrpicion
+            $subscription = $this->CurlGet($subscriptionDataRequest,"https://us-central1-absolut-go.cloudfunctions.net/app/api/newSubscription");
+    
 
-        $customer = $openpay->customers->get($id_customer);
-        $subscription = $customer->subscriptions->add($subscriptionData);
+            return ["plan" => $plan, "subscription" => $subscription];
+        }else {
+            return ["error" => "No se pudo crear el Plan soliciado", "msg" => $plan];
+        }
+         
+        
+    }
 
-        return ["plan_id" => $plan->id, "subscription_id" => $subscription->id];
+    // Obtencion de Plan
+    function getPlan($plan_id)
+    {
+        $fields = array(
+            'plan_id' => $plan_id
+        );
+
+        return $this->CurlGet($fields,"https://us-central1-absolut-go.cloudfunctions.net/app/api/GetPlan");
     }
 
     function CurlGet($fields,$url)
