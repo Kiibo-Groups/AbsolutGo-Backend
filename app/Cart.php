@@ -212,29 +212,7 @@ class Cart extends Authenticatable
             $purse_x_delivery = ($subTotal * $store_d->purse_x_delivery) / 100;
         }
 
-        $cashback_ids = array_map(fn($r) => $r['id'], $data);
-
-        $cashbacks = Offer::whereIn('code', $cashback_ids)->get();
-
-    
-        $total_cashback = 0;
-        foreach ($cashbacks as $cashback) {
-            $item = $data[array_search($cashback->code, array_column($data, 'id'))]; 
-
-            if(isset($cashback->start_from) && $subTotal < $cashback->start_from)
-                continue;
-
-            if($cashback->status != 0)
-                continue;
-            
-            if($cashback->type == 0)
-                $total_cashback += $item['SubTotal'] * $cashback->value / 100;
-            else 
-                $total_cashback += $cashback->value;
-            
-        }
-
-        $discount += $total_cashback;
+        
 
         //  Obtenemos la comision por ticket
         $service_fee = 0;

@@ -96,6 +96,41 @@ class Order extends Authenticatable
 
          $admin = Admin::find(1);
 
+         /** Calculamos el Cashback */
+         $carts = Cart::where('cart_no', $data['cart_no'])->get();
+
+         $cart_data = [];
+         foreach($carts as $cart) {
+            $cart_data[] = [
+               'id' => $cart->id,
+               'SubTotal' => $cart->price
+            ];
+         }
+
+         $cashback_ids = array_map(fn($r) => $r['id'], $cart_data);
+
+         $cashbacks = Offer::whereIn('code', $cashback_ids)->get();
+         $total_cashback = 0;
+         foreach ($cashbacks as $cashback) {
+               $item = $cart_data[array_search($cashback->code, array_column($cart_data, 'id'))]; 
+
+               if(isset($cashback->start_from) && $add->total < $cashback->start_from)
+                  continue;
+
+               if($cashback->status != 0)
+                  continue;
+               
+               if($cashback->type == 0)
+                  $total_cashback += $item['SubTotal'] * $cashback->value / 100;
+               else 
+                  $total_cashback += $cashback->value;
+               
+         }
+
+         $app_user = AppUser::find($add->user_id);
+         $app_user->saldo = $app_user->saldo + $total_cashback;
+         $app_user->save();
+
          /** Eliminamos el carrito y los cupones en caso de existir */
             Cart::where('cart_no',$data['cart_no'])->delete();
             CartAddon::where('cart_id',$data['cart_no'])->delete();
@@ -147,6 +182,7 @@ class Order extends Authenticatable
          $total      = ($item_total - $discount) + $d_charges['costs_ship'];
       }
 
+      
       //  Obtenemos la comision por ticket
       $service_fee = 0;
       $store_id    = Cart::where('cart_no',$cartNo)->first()->store_id;
