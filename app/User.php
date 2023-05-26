@@ -196,7 +196,9 @@ class User extends Authenticatable
         $add->type_menu             = isset($data['type_menu']) ? $data['type_menu'] : 0;
         $add->type_store            = isset($data['type_store']) ? $data['type_store'] : 0;
         $add->min_cart_value        = isset($data['min_cart_value']) ? $data['min_cart_value'] : null;
-        
+        $add->dias_credito          =  isset($data['dias_credito']) ? $data['dias_credito'] : null;
+        $add->opinion          =  isset($data['opinion']) ? $data['opinion'] : null;
+            
         $add->c_type                = isset($data['c_type']) ? $data['c_type'] : 0;
         $add->c_value               = isset($data['c_value']) ? $data['c_value'] : 0;
         $add->t_type                = isset($data['t_type']) ? $data['t_type'] : 0;
@@ -272,6 +274,31 @@ class User extends Authenticatable
 
         
         $add->save();
+
+        if(isset($data['domicilio'])) {
+            $filename = $add->id . "." . $data['domicilio']->getClientOriginalExtension();
+            $data['domicilio']->move("upload/user/domicilio/", $filename);
+        }
+
+        if(isset($data['acta'])) {
+            $filename = $add->id . "." . $data['acta']->getClientOriginalExtension();
+            $data['acta']->move("upload/user/acta/", $filename);
+        }
+
+        if(isset($data['representante'])) {
+            $filename = $add->id . "." . $data['representante']->getClientOriginalExtension();
+            $data['representante']->move("upload/user/representante/", $filename);
+        }
+
+        if(isset($data['poder'])) {
+            $filename = $add->id . "." . $data['poder']->getClientOriginalExtension();
+            $data['poder']->move("upload/user/poder/", $filename);
+        }
+
+        if(isset($data['caratula'])) {
+            $filename = $add->id . "." . $data['caratula']->getClientOriginalExtension();
+            $data['caratula']->move("upload/user/caratula/", $filename);
+        }
 
         // Creamos el QR https://{{$add->dominio}}.kiibo.mx
         $link_qr        = "https://bincar.kiibo.mx/admin";

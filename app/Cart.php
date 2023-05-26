@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\api\DboyController;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Validator;
@@ -211,9 +212,34 @@ class Cart extends Authenticatable
             $purse_x_delivery = ($subTotal * $store_d->purse_x_delivery) / 100;
         }
 
+        $cashback_ids = array_map(fn($r) => $r['id'], $data);
+
+        $cashbacks = Offer::whereIn('code', $cashback_ids)->get();
+
+    
+        $total_cashback = 0;
+        foreach ($cashbacks as $cashback) {
+            $item = $data[array_search($cashback->code, array_column($data, 'id'))]; 
+
+            if(isset($cashback->start_from) && $subTotal < $cashback->start_from)
+                continue;
+
+            if($cashback->status != 0)
+                continue;
+            
+            if($cashback->type == 0)
+                $total_cashback += $item['SubTotal'] * $cashback->value / 100;
+            else 
+                $total_cashback += $cashback->value;
+            
+        }
+
+        $discount += $total_cashback;
+
         //  Obtenemos la comision por ticket
         $service_fee = 0;
         $service_nearby = false;
+        $travel_time = 0;
         if (isset($row->store_id)) {
             $store      = User::find($row->store_id);
             $t_value    = $store->t_value;
@@ -227,6 +253,9 @@ class Cart extends Authenticatable
 
             // Verificamos la distancia real entre usuario y comercio
             $service_nearby    = $store->GetMax_distance($row->store_id,$store->distance_max,$real_lat,$real_lng);
+
+            $dboy = new DboyController;
+            $travel_time = $dboy->calcTimeBasedOnDistance($real_lat, $real_lng, $store->lat, $store->lng)['rows']['elements'][0]['duration']['text'];
         } 
 
         return [
@@ -245,7 +274,7 @@ class Cart extends Authenticatable
             'store'          => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['name'] : [],
             'store_id'       => isset($sid->store_id) ? $sid->store_id : 0,
             'store_status'   => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['open_status'] : false,
-            'time_delivery'  => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['time_delivery'] : [],
+            'time_delivery'  => $travel_time,
             'currency'       => Admin::find(1)->currency
         ];
     }

@@ -189,4 +189,9 @@
     <button href="javascript::void()" data-bs-toggle="modal" data-bs-target="#slideRightModalInfoPay{{ $row->id }}" class="btn btn-primary">
         Desglose de información
     </button>
+    <br>
+    <br>
+    <a href="/upload/order/delivery/delivery_end_{{ $row->id }}.jpg" target="_blank" class="btn btn-primary">
+        Ver imagen del pedido
+    </a>
 @endif

@@ -1197,8 +1197,6 @@ class ApiController extends Controller {
 			$data = $request->all();
 			$req = new User;
 
-			Log::info($data);
-
 			$data['status_mon'] = 0;
 			$data['status_tue'] = 0;
 			$data['status_wed'] = 0;

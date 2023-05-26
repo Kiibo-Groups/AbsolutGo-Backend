@@ -417,6 +417,24 @@ class DboyController extends Controller {
 		return response()->json(['data' => true]);
 	}
 
+	public function calcTimeBasedOnDistance($from_lat, $from_lng, $to_lat, $to_lng) {
+		$url = "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$from_lat,$from_lng&origins=$to_lat,$to_lng&units=metric&key=".Admin::find(1)->ApiKey_google;
+		$max      = 0;
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_URL,$url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec ($ch);
+        $info = curl_getinfo($ch);
+        $http_result = $info ['http_code'];
+        curl_close ($ch);
+
+
+		$request = json_decode($output, true);
+		
+		return $request;
+	}
 
 	public function getPolylines()
 	{

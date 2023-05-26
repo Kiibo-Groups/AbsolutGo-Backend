@@ -13,7 +13,7 @@
 			color: #555;
 		}
 		form {
-			max-width: 90%;
+			max-width: 500px;
 			margin: 100px auto;
 			padding: 30px;
 			background-color: #fff;
@@ -127,6 +127,8 @@
 	<form id="form" enctype="multipart/form-data">
 		<h2>Alta para proveedores AbsoluteGO</h2>
 		 
+		<img src="img/logo.jpeg" id="logo">
+
 		<label for="name">Nombre:</label>
 		<input type="text" id="name" name="name" required>
 
@@ -157,16 +159,16 @@
 		<input type="file" id="acta" name="acta" required>
 
 		<label for="representante">ID Representante legal:</label>
-		<input type="text" id="representante" name="representante" required>
+		<input type="file" id="representante" name="representante" required>
 
 		<label for="poder">Poder del representante legal:</label>
-		<input type="text" id="poder" name="poder" required>
+		<input type="file" id="poder" name="poder" required>
 
 		<label for="dias_credito">Días de crédito:</label>
 		<input type="text" id="dias_credito" name="dias_credito" required>
 
 		<label for="caratula">Carátula bancaria:</label>
-		<input type="text" id="caratula" name="caratula" required>
+		<input type="file" id="caratula" name="caratula" required>
 
 		<label for="store_type">Categoría Principal:</label>
 		<select id="store_type" name="store_type" required>
@@ -193,7 +195,7 @@
 		<h5>Haga click en la zona de la dirección</h5>
 		<div id="map"></div>
 
-		<input type="submit" value="Submit">
+		<input type="submit" value="Enviar">
 	</form>
 	<script>
 		var lat = 0, lng = 0;
