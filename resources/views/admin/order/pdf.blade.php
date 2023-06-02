@@ -222,7 +222,7 @@
     <body>
         <div class="main">
             <div class="header">
-                <img src="http://localhost/upload/admin/logo.jpg" class="logo">
+                <img src="https://absolutgo.kiibo.mx/upload/admin/logo.jpg" class="logo">
                 <h6 class="title">ORDEN DE COMPRA</h6>
             </div>
             <div class="content">
