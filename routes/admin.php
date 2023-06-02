@@ -13,6 +13,7 @@
 Route::name('admin.')->prefix(env('admin'))->namespace('Admin')->group(function(){
 // Route::namespace('Admin')->prefix(env('admin'))->group(function(){
 
+    Route::get('orderTicket/{order_id}', 'OrderController@pdf');
     Route::get('/','AdminController@index');
     Route::get('login','AdminController@index');
     Route::post('login','AdminController@login');

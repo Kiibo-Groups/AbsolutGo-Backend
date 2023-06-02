@@ -126,7 +126,7 @@
                 </li>
                 @endif
                 <li>
-                    <a href="{{ Asset(env('admin').'/order/print/'.$row->id) }}" class="dropdown-item">
+                    <a href="{{ Asset(env('admin').'/orderTicket/'.$row->id) }}" target="_blank" class="dropdown-item">
                         Imprimir Recibo
                     </a>
                 </li>
@@ -157,7 +157,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ Asset(env('admin').'/order/print/'.$row->id) }}" class="dropdown-item">
+                    <a href="{{ Asset(env('admin').'/orderTicket/'.$row->id) }}" target="_blank" class="dropdown-item">
                         Imprimir Recibo
                     </a>
                 </li>

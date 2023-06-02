@@ -16,10 +16,15 @@ use App\OrderAddon;
 use App\Tables;
 use App\AppUser;
 use App\OrderItem;
+use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Validator;
 use Redirect;
 use IMS;
+use PDF;
+
 class OrderController extends Controller {
 
 	public $folder  = "admin/order.";
@@ -142,6 +147,44 @@ class OrderController extends Controller {
 			return Redirect::back()->with('message','El status del pedido #'.$_GET['id']." ha sido cambiado con éxito.");
 		}
 		 
+	}
+
+	public function pdf(int $order_id) {
+		$order = Order::find($order_id);
+		$store = User::find($order->store_id);
+		$items = OrderItem::where('order_id', $order_id)->get();
+
+		$data = [];
+		
+		$data['fecha'] = Carbon::now()->format('d/m/Y');
+		$data['proveedor'] = $store->name;
+		$data['facturar_a'] = $order->name;
+		$data['id_pedido'] = $order->code_order;
+		$data['fecha_entrega'] = explode("|", $order->status_time)[0];
+		$data['elementos'] = [];
+
+		$subtotal = 0;
+		foreach($items as $item) {
+			$i = Item::find($item->item_id);
+			$data['elementos'][] = [
+				"cantidad" => $item->qty,
+				"tipo" => $item->qty_type == 1 ? "REC" : "",
+				"descripcion" => $i->name,
+				"precio" => $item->price
+			];
+			$subtotal += $item->price;
+		}
+
+		$data['subtotal'] = $subtotal;
+		$data['descuento'] = $order->discount;
+		$data['iva'] = $order->t_chargues;
+		$data['total'] = $order->total;
+
+		$pdf = PDF::loadView('admin.order.pdf', $data);
+		$pdf->render();
+		return response($pdf->output(), 200, [
+			'Content-Type' => 'application/pdf'
+		]);
 	}
 
 	public function dispatched(Request $Request)
