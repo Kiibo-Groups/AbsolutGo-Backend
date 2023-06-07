@@ -279,12 +279,15 @@ class ApiController extends Controller {
 
 	public function getCart($cartNo)
 	{
-		try {
-			$res = new Cart;
+		$res = new Cart;
 			return response()->json(['data' => $res->getCart($cartNo)]);
-		} catch (\Exception $th) {
-			return response()->json(['data' => 'error','error' => $th->getMessage()]);
-		}
+			
+		// try {
+		// 	$res = new Cart;
+		// 	return response()->json(['data' => $res->getCart($cartNo)]);
+		// } catch (\Exception $th) {
+		// 	return response()->json(['data' => 'error','error' => $th->getMessage()]);
+		// }
 	}
 
 	public function deleteAll($cartNo)

@@ -155,8 +155,8 @@ class Cart extends Authenticatable
 
         $data       = [];
         $city_id    = isset($_GET['city_id']) ? $_GET['city_id'] : 0;
-        $real_lat   = isset($_GET['real_lat']) ? $_GET['real_lat'] : 0;
-        $real_lng   = isset($_GET['real_lng']) ? $_GET['real_lng'] : 0;
+        $real_lat   = isset($_GET['lat']) ? $_GET['lat'] : 0;
+        $real_lng   = isset($_GET['lng']) ? $_GET['lng'] : 0;
 
         $u = new User;
 
@@ -233,8 +233,13 @@ class Cart extends Authenticatable
             $service_nearby    = $store->GetMax_distance($row->store_id,$store->distance_max,$real_lat,$real_lng);
 
             $dboy = new DboyController;
-            $travel_time = $dboy->calcTimeBasedOnDistance($real_lat, $real_lng, $store->lat, $store->lng)['rows']['elements'][0]['duration']['text'];
-        } 
+            $req_time = $dboy->calcTimeBasedOnDistance($real_lat, $real_lng, $store->lat, $store->lng);
+            $travel_time;
+            
+            if ($req_time['rows'][0]['elements'][0]['status'] === "OK") {
+               $travel_time = $req_time['rows'][0]['elements'][0]['duration']['text'];
+            }
+        }
 
         return [
             'data'           => $data,

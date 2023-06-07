@@ -156,12 +156,16 @@ class User extends Authenticatable
         
         $add->save();
 
-        // Creamos el QR https://{{$add->dominio}}.kiibo.mx
-        $link_qr        = "https://bincar.kiibo.mx/admin";
-        $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
+        if ($type === 'add') {
+            // Creamos el QR https://{{$add->dominio}}.kiibo.mx
+            $link_qr        = "https://bincar.kiibo.mx/admin";
+            $codeQR         = base64_encode(QrCode::format('png')->size(200)->generate($link_qr));
 
-        $add->qr_code   = $codeQR;
-        $add->save();
+            $add->qr_code   = $codeQR;
+            $add->save();
+        }
+
+       
         
         //Add Times Week
         $op_times = new Opening_times;
