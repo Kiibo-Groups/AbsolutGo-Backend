@@ -14,7 +14,7 @@ class Cart extends Authenticatable
     public function addNew($data)
     {
         $store = Item::find($data['id']);
-        $this->checkStore($data,$store->store_id);
+        // $this->checkStore($data,$store->store_id);
 
         // Verificamos si tiene un cupon de descuento aplicado si si se elimina para volver a calcular
         $checkCupon = CartCoupen::where('cart_no',$data['cart_no'])->first();
@@ -55,10 +55,8 @@ class Cart extends Authenticatable
         $addon->addNew($data,$add->id);
 
         return [
-
-        'count' => Cart::where('cart_no',$data['cart_no'])->count(),
-        'cart'  => $this->getItemQty($data['cart_no'])
-
+            'count' => Cart::where('cart_no',$data['cart_no'])->count(),
+            'cart'  => $this->getItemQty($data['cart_no'])
         ];
     }
 
@@ -87,7 +85,7 @@ class Cart extends Authenticatable
             }
 
             CartCoupen::where('cart_no',$_GET['cart_no'])->delete();
-            return $this->getItemQty($_GET['cart_no']);
+            return $this->getCart($_GET['cart_no']);
         }
         else
         {
@@ -169,6 +167,9 @@ class Cart extends Authenticatable
                 'item_id'  => $row->item_id,
                 'price'    => $row->price, 
                 'qty'      => $row->qty,
+                'store'          => isset($row->store_id) ? $u->getLang($row->store_id,$_GET['lid'])['name'] : [],
+                'store_id'       => isset($row->store_id) ? $row->store_id : 0,
+                'store_status'   => isset($row->store_id) ? $u->getLang($row->store_id,$_GET['lid'])['open_status'] : false,
                 'item'     => $u->getLangItem($row->item_id,$_GET['lid'])['name'],
                 'img'      => $row->img ? Asset('upload/item/'.$row->img) : null,
                 'addon'    => $this->cartAddon($row->id,$row->item_id),
@@ -212,8 +213,6 @@ class Cart extends Authenticatable
             $purse_x_delivery = ($subTotal * $store_d->purse_x_delivery) / 100;
         }
 
-        
-
         //  Obtenemos la comision por ticket
         $service_fee = 0;
         $service_nearby = false;
@@ -254,9 +253,6 @@ class Cart extends Authenticatable
             'purse_x_table'  => $purse_x_table,
             'purse_x_pickup' => $purse_x_pickup,
             'purse_x_delivery' => $purse_x_delivery,
-            'store'          => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['name'] : [],
-            'store_id'       => isset($sid->store_id) ? $sid->store_id : 0,
-            'store_status'   => isset($sid->store_id) ? $u->getLang($sid->store_id,$_GET['lid'])['open_status'] : false,
             'time_delivery'  => $travel_time,
             'currency'       => Admin::find(1)->currency
         ];
@@ -348,7 +344,7 @@ class Cart extends Authenticatable
             if($user->min_cart_value > 0)
             {
                 if($total < $user->min_cart_value)
-                { 
+                {
                     if ($c_type == 0) {
                         // Es un valor x KM
                         $val = $UserTab->Costs_shipKM($c_value,$min_distance,$min_value,$user->distance);

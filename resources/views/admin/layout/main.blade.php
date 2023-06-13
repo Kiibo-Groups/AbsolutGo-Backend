@@ -94,7 +94,7 @@
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
         <div class="copyright">
-        &copy; Copyright <strong><span>KiiboGo</span></strong>. All Rights Reserved
+        &copy; Copyright <strong><span>KiiboGroups</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
         Designed by <a href="https://kiibo.mx" target="_blank">Kiibo</a>

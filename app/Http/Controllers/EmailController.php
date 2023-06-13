@@ -206,7 +206,7 @@ class EmailController extends BaseController
               <td style="overflow-wrap:break-word;word-break:break-word;padding:35px 20px 10px;font-family:"Lato",sans-serif;" align="left">
                 
           <div style="line-height: 120%; text-align: left; word-wrap: break-word;">
-            <p style="font-size: 14px; line-height: 120%;"><span style="font-size: 24px; line-height: 28.8px; color: #18c197;"><strong>Factura de KiiboGO</strong></span></p>
+            <p style="font-size: 14px; line-height: 120%;"><span style="font-size: 24px; line-height: 28.8px; color: #18c197;"><strong>Factura de AbsolutGo</strong></span></p>
           </div>
         
               </td>

@@ -280,7 +280,7 @@ class ApiController extends Controller {
 	public function getCart($cartNo)
 	{
 		$res = new Cart;
-			return response()->json(['data' => $res->getCart($cartNo)]);
+		return response()->json(['data' => $res->getCart($cartNo)]);
 			
 		// try {
 		// 	$res = new Cart;

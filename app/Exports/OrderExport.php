@@ -45,12 +45,11 @@ class OrderExport implements FromView,WithHeadings,WithTitle
             'store_id' => $_POST['store_id']
         ];
 
-		return View($this->folder.'report',[
-
-		'data' => $res->getReport($Request),
-		'from' => $_POST['from'] ? date('d-M-Y',strtotime($_POST['from'])) : null,
-		'to'   => $_POST['to'] ? date('d-M-Y',strtotime($_POST['to'])) : null,
-		'user' => new User
+		return View($this->folder.'report',[ 
+            'data' => $res->getReport($Request),
+            'from' => $_POST['from'] ? date('d-M-Y',strtotime($_POST['from'])) : null,
+            'to'   => $_POST['to'] ? date('d-M-Y',strtotime($_POST['to'])) : null,
+            'user' => new User
 		]);
     }
 }

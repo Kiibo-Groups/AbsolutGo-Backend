@@ -18,36 +18,22 @@ class Order extends Authenticatable
 
    public function addNew($data)
    { 
-      $store               = User::find($this->getStore($data['cart_no']));
-
-      $addStatus           = false;
-      $address             = $data['address']; // Direccion de entrega
-      $real_lat            = isset($data['real_lat']) ? $data['real_lat'] : 0;
-      $real_lng            = isset($data['real_lng']) ? $data['real_lng'] : 0;
-
-      $latD                = isset($data['lat']) ? $data['lat'] : 0;;
-      $lngD                = isset($data['lng']) ? $data['lng'] : 0;;
- 
+      $store               = User::find($this->getStore($data['cart_no'])); 
       
-      if (isset($data['otype']) && $data['otype'] == 1) { 
-         // Verificamos la distancia real entre usuario y comercio
-         $dataMD    = $store->GetMax_distance($store->id,$store->distance_max,$real_lat,$real_lng);
-         // Envio a domicilio
-         if ($dataMD == 0) {
-            // No hay servicio
-            return ['data' => "Not_service"];
-         }else {
-            $addStatus = true;
-         }
-      }else {
-         $addStatus = true;
-      }
+      foreach ($store as $st) {
+         
+         $address             = $data['address']; // Direccion de entrega
+         $real_lat            = isset($data['real_lat']) ? $data['real_lat'] : 0;
+         $real_lng            = isset($data['real_lng']) ? $data['real_lng'] : 0;
 
-      if ($addStatus == true) {
+         $latD                = isset($data['lat']) ? $data['lat'] : 0;;
+         $lngD                = isset($data['lng']) ? $data['lng'] : 0;;
+   
+         
          $add                 = new Order;
          $add->cart_no        = $data['cart_no'];
          $add->user_id        = $data['user_id'];
-         $add->store_id       = $this->getStore($data['cart_no']);
+         $add->store_id       = $st->id;
          $add->name           = isset($data['user_id']) ? AppUser::find($data['user_id'])->name : 'Indefinido';
          $add->email          = isset($data['user_id']) ? AppUser::find($data['user_id'])->email : 'Indefinido';
          $add->phone          = isset($data['user_id']) ? AppUser::find($data['user_id'])->phone : 'Indefinido';
@@ -57,11 +43,11 @@ class Order extends Authenticatable
          $add->InnStore       = isset($data['InnStore']) ? $data['InnStore'] : 0;
          $add->mesa           = isset($data['mesa']) ? $data['mesa'] : 0;
          $add->type           = isset($data['otype']) ? $data['otype'] : 1;
-         $add->price_comm     = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$store->city_id)['Price_comm'];
-         $add->d_charges      = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$store->city_id)['d_charges'];
-         $add->t_charges      = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$store->city_id)['service_fee'];
-         $add->discount       = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$store->city_id)['discount'];
-         $add->total          = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$store->city_id)['total'];
+         $add->price_comm     = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$st->city_id)['Price_comm'];
+         $add->d_charges      = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$st->city_id)['d_charges'];
+         $add->t_charges      = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$st->city_id)['service_fee'];
+         $add->discount       = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$st->city_id)['discount'];
+         $add->total          = $this->getTotal($data['cart_no'],$data['otype'],$data['lat'],$data['lng'],$st->city_id)['total'];
          $add->payment_method = isset($data['payment']) ? $data['payment'] : 1;
          $add->payment_id     = isset($data['payment_id']) ? $data['payment_id'] : 0;
          $add->notes          = isset($data['notes']) ? $data['notes'] : '';
@@ -132,15 +118,15 @@ class Order extends Authenticatable
          $app_user->save();
 
          /** Eliminamos el carrito y los cupones en caso de existir */
-            Cart::where('cart_no',$data['cart_no'])->delete();
+            Cart::where('cart_no',$data['cart_no'])->where('store_id',$st->id)->delete();
             CartAddon::where('cart_id',$data['cart_no'])->delete();
             CartCoupen::where('cart_no',$data['cart_no'])->delete();
          /** Eliminamos el carrito y los cupones en caso de existir */
 
          /** Validamos si existe alguna suscripcion de compra */
          
-			$openpay = new OpenpayController;
-			$newSuscript = new Subscription; 
+         $openpay = new OpenpayController;
+         $newSuscript = new Subscription; 
 
          if ($data['suscript']) {					
             // Creamos el plan y su suscripcion
@@ -152,17 +138,30 @@ class Order extends Authenticatable
             return response()->json(['data' => 'success', 'order_id' => $add->id,'suscript' => "not_suscript"]);
          }
          /** Validamos si existe alguna suscripcion de compra */
-
- 
-      } else {
-         return ['data' => "Not_service"];
       }
+      // if (isset($data['otype']) && $data['otype'] == 1) { 
+      //    // Verificamos la distancia real entre usuario y comercio
+      //    $dataMD    = $store->GetMax_distance($store->id,$store->distance_max,$real_lat,$real_lng);
+      //    // Envio a domicilio
+      //    if ($dataMD == 0) {
+      //       // No hay servicio
+      //       return ['data' => "Not_service"];
+      //    }else {
+      //       $addStatus = true;
+      //    }
+      // }else {
+      //    $addStatus = true;
+      // }
+      // if ($addStatus == true) {
+      // } else {
+      //    return ['data' => "Not_service"];
+      // }
 
    }
 
    public function getStore($cartNo)
    {
-      return Cart::where('cart_no',$cartNo)->first()->store_id;
+      return Cart::where('cart_no',$cartNo)->select('store_id')->distinct()->get();
    }
 
    public function getTotal($cartNo,$type,$latD,$lngD,$city_id)
@@ -933,7 +932,7 @@ class Order extends Authenticatable
          $mensaje   .=   "Total de compra: ".$admin->currency.$order->total."<br />";
          $mensaje   .=   "Metodo de pago:".$pay_type;
          $mensaje   .=   "<br /><br /><hr> ayudanos recomendandonos, no te olvides de calificar el comercio y #QuedateEnCasa.";
-         $cabeceras = 'From: KiiboGo' . "\r\n";
+         $cabeceras = 'From: AbsolutGo' . "\r\n";
 
          $cabeceras .= 'MIME-Version: 1.0' . "\r\n";
 
@@ -997,7 +996,7 @@ class Order extends Authenticatable
      
       $mensaje    =   "Hemos entregado tu pedido<br />";
      
-      $cabeceras = 'From: KiiboGo' . "\r\n";
+      $cabeceras = 'From: AbsolutGo' . "\r\n";
       $cabeceras .= 'MIME-Version: 1.0' . "\r\n";
       $cabeceras .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
       @mail($para, $asunto, utf8_encode($mensaje), $cabeceras);
